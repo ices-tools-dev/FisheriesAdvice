@@ -131,6 +131,6 @@ legend(x = 2014, y = max(ylim),
 dev.off()
 # par(mar=c(5, 4, 4, 2) + 0.1)
 # }
-
-
-stackplot(dataOthers, colors = colList)
+# 
+# 
+# stackplot(dataOthers, colors = colList)
