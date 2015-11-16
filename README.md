@@ -22,10 +22,10 @@ Figure 2. Effort (kW days at sea) by nation reported to STECF within the Celtic 
 
 * Notes: ACOM sub-group not interested, but Secretariat leadership asked to include. Asked for effort in terms of time, not kwh.
 * Current format: stacked graph.
-* Data source: ?
+* Data source: [STECF online data repositories](https://stecf.jrc.ec.europa.eu/data-reports)
 * Data needed: ?
-* Responsible person: Tomas
-* Challenges: kwh not avaialbe, therefore it must be presented in kw days.
+* Responsible person: Thomas
+* Challenges: kWh not available, therefore it must be presented in kW days. (13-11-15: maps produced w/ kWd as provided by WGSFD-script)
 * Workload: 
 * Format/presentation notes/suggestions: 
 * Status: TBD
@@ -43,8 +43,8 @@ Figure 3. ICES official landings by species groups within the Celtic Seas ecoreg
         + Anna O can help with any questions. 
         + SL doesn’t think we need the preliminary data for this.
 * Data needed: ?
-* Responsible person: Tomas
-* Challenges: 
+* Responsible person: Thomas
+* Challenges:
 * Workload: 
 * Format/presentation notes/suggestions: 
 * Status: TBD
@@ -59,7 +59,7 @@ Figure 4. Top 10 3 species within each species group for the Celtic Seas ecoregi
         + Anna O can help with any questions. 
         + SL doesn’t think we need the preliminary data for this.
 * Data needed: ?
-* Responsible person: Tomas
+* Responsible person: Thomas
 * Challenges: 
 * Workload: 
 * Format/presentation notes/suggestions: 
@@ -69,9 +69,9 @@ Figure 5. EU landings by gear within the Celtic Seas ecoregion as available from
 
 * Notes: produce in stacked graph and bar charts and present to the ACOM sub-group to see what they would like.
 * Current format: stacked graph.
-* Data source: ?
+* Data source: [STECF online data repositories](https://stecf.jrc.ec.europa.eu/data-reports)
 * Data needed: ?
-* Responsible person: Tomas
+* Responsible person: Thomas
 * Challenges: 
 * Workload: 
 * Format/presentation notes/suggestions: 
@@ -122,10 +122,10 @@ Figure yy. Distribution of effort deployed by EU nations by gear type within the
 * Current format: stacked graph
 * Data source: STECF database
 * Data needed: ?
-* Responsible person: Tomas
-* Challenges: kwh not avaialbe, therefore it must be presented in kw days.
+* Responsible person: Thomas
+* Challenges: kwh not available, therefore it must be presented in kw days.
 * Workload: ?
-* Format/presentation notes/suggestions: 
+* Format/presentation notes/suggestions: Needs legends, clear disticintion of relevant ecoregion.
 * Status: TBD
 
 Figure xx; Spatial distribution of fishing effort by active demersal gears, during 2012. Adapted from ICES WGSFD, 2014.
@@ -134,7 +134,7 @@ Figure xx; Spatial distribution of fishing effort by active demersal gears, duri
 * Current format: WGSFD data product/map
 * Data source: WGSFD and ?
 * Data needed: 2015 data product by gear needed.
-* Responsible person: Tomas, Mark DC, Carlos
+* Responsible person: Thomas, Mark DC, Carlos
 * Challenges: none
 * Workload: ?
 * Format/presentation notes/suggestions: 
