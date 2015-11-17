@@ -1,3 +1,7 @@
+# * = species with synonymous name already in list
+# ** = new species added to list using fishbase and WORMS
+# See adviceoutline-notes.pdf for further details (currently not in FisheriesAdvice repo [17-11-15])
+
 scientific name,common name,feeding guild,size guild,note
 Agonus cataphractus,hooknose,demersal benthivore,medium demersal,
 Alosa alosa,allis shad,pelagic planktivore,small pelagic,
