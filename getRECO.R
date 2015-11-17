@@ -1,4 +1,4 @@
-rm(list = ls())
+# rm(list = ls())
 ###############
 # Script Info #
 ###############
@@ -9,7 +9,7 @@ rm(list = ls())
 #
 # example:
 # tt <- getRECO(ICES_Book = "E")
-
+#
 getRECO <- function(ICES_Book) {
   if(!toupper(ICES_Book) %in% LETTERS[c(1:8,10)]) {
     stop("Please refer to the ICES_Book by the letter")
@@ -31,9 +31,7 @@ getRECO <- function(ICES_Book) {
   # CHANGES/ ADDITIONS #
   ######################
   # Need to add: 
-  # ~Rdata file of all folders, for off-server access to data
-  # ~Faroe Islands data is in the incorrect format, must remove for now #
-  
+  # 
   # Done:
   #
   ############
