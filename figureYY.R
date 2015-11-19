@@ -10,6 +10,7 @@
 dataPath    <- "~/r/advice/data/"
 outPath     <- "~/r/advice/output/"
 codePath    <- "~/r/advice/code/"
+stecfPath   <- "~/r/rdata/"
 
 pathList <- as.list(c(dataPath, outPath, codePath))
 
@@ -20,6 +21,8 @@ for (p in pathList) {
   
 }
 
+#- Check if STECF data is downloaded, if not grabs data from STECF data repo (Warning: large file -- may take a while to complete download)
+source("~/r/FisheriesAdvice/stecfDataGrabber.R")
 #------------||
 
  
@@ -35,17 +38,17 @@ library(extrafont)
 #--- simple data load -- should be made fancier when time permits (i.e. after deadline of advice example 2015)
 fao27 <-
     read.delim(
-      "~/r/advice/data/stecf-economic-fleet.data", header = TRUE, fill = TRUE, stringsAsFactors = FALSE, dec = "."
+      "~/r/rdata/data/stecf-economic-fleet.data", header = TRUE, fill = TRUE, stringsAsFactors = FALSE, dec = "."
     )
 #   
 fishtech.list <-
     read.csv(
-      "~/r/ices/keys-lists/stecf-fishingtech.list", header = TRUE, stringsAsFactors = FALSE
+      "~/r/FisheriesAdvice/keys-lists/stecf-fishingtech.list", header = TRUE, stringsAsFactors = FALSE
     )
 
 gear.list <-
   read.csv(
-    "~/r/ices/keys-lists/stecf-gear.list", header = TRUE, stringsAsFactors = FALSE
+    "~/r/FisheriesAdvice/keys-lists/stecf-gear.list", header = TRUE, stringsAsFactors = FALSE
   )
 #   
 # reg.list <-
