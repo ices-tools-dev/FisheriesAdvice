@@ -27,12 +27,12 @@ data <- read.csv(unz(tmpFile,
 
 guilds <-
   read.delim(
-    "~/MEGA/ices/r/ices/keys-lists/guild.list", header = TRUE, sep = ",", stringsAsFactors = FALSE, fileEncoding = "UTF-8"
+    "~/r/keys-lists/guild.list", header = TRUE, sep = ",", stringsAsFactors = FALSE, fileEncoding = "UTF-8"
   )
 
 speciesNames <-
   read.csv(
-    "~/MEGA/ices/r/ices/keys-lists/species.list", header = TRUE, stringsAsFactors = FALSE
+    "~/r/keys-lists/species.list", header = TRUE, stringsAsFactors = FALSE
   )
 
 #
@@ -109,8 +109,8 @@ ylim = c(0, max(rowSums(dataOthers, na.rm = T)))
 #     colors = c("green","red","lightgray","blue","orange","purple", "yellow")
 
 
-png(filename = "~/MEGA/ices/r/ices/testfig3.png",
-    width = 172.4,
+png(filename = "~/testfig3-2.png",
+    width = 190,
     height = 172.4,
     units = "mm",
     res = 600)
@@ -153,7 +153,7 @@ for(c in 1:length(cols)) {
   recent = summary
 }
 
-legend(x = 2014, y = max(ylim), 
+legend(x = 2013.30, y = max(ylim), 
        rev(cols),
        col = rev(colList),
        cex = 0.8,

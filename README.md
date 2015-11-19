@@ -25,10 +25,10 @@ Figure 2. Effort (kW days at sea) by nation reported to STECF within the Celtic 
 * Data source: [STECF online data repositories](https://stecf.jrc.ec.europa.eu/data-reports)
 * Data needed: ?
 * Responsible person: Thomas
-* Challenges: kWh not available, therefore it must be presented in kW days. (13-11-15: maps produced w/ kWd as provided by WGSFD-script)
+* Challenges: kWh not available, therefore it must be presented in kW days. Actual kW days at sea is not reported for many countries, 
 * Workload: 
 * Format/presentation notes/suggestions: 
-* Status: TBD
+* Status: Done, but graph looks off, compared to what is already in the advice draft.
 
 Figure 3. ICES official landings by species groups within the Celtic Seas ecoregion, 2006-2013.
 
@@ -47,7 +47,7 @@ Figure 3. ICES official landings by species groups within the Celtic Seas ecoreg
 * Challenges:
 * Workload: 
 * Format/presentation notes/suggestions: 
-* Status: TBD
+* Status: Almost done. Minor errors in data (i.e. "var.2" is not a good guild designation)
 
 Figure 4. Top 10 3 species within each species group for the Celtic Seas ecoregion as reported in the ICES official landings, 2006-2013.
 
@@ -63,7 +63,7 @@ Figure 4. Top 10 3 species within each species group for the Celtic Seas ecoregi
 * Challenges: 
 * Workload: 
 * Format/presentation notes/suggestions: 
-* Status: TBD
+* Status: TBD. Will be finished Friday 20-11-15.
 
 Figure 5. EU landings by gear within the Celtic Seas ecoregion as available from STECF data. Note: Spanish data only available for 2012-13.
 
@@ -75,7 +75,7 @@ Figure 5. EU landings by gear within the Celtic Seas ecoregion as available from
 * Challenges: 
 * Workload: 
 * Format/presentation notes/suggestions: 
-* Status: TBD
+* Status: Graphs are similar to fig YY, with other data. Should be finished soon.
 
 Figure 6. Stock trends of F/Fmsy and total landings volumes removed in relation to Fmsy status, separated by demersal and pelagic stocks within the Celtic Seas ecoregion, 1990-2013. Currently only contains the stocks available in the ICES standard graphs database of 2014 advice.
 
@@ -126,7 +126,7 @@ Figure yy. Distribution of effort deployed by EU nations by gear type within the
 * Challenges: kwh not available, therefore it must be presented in kw days.
 * Workload: ?
 * Format/presentation notes/suggestions: Needs legends, clear disticintion of relevant ecoregion.
-* Status: TBD
+* Status: Almost done, minor tweaks are still to be done. Data is there, the rest is cosmetics.
 
 Figure xx; Spatial distribution of fishing effort by active demersal gears, during 2012. Adapted from ICES WGSFD, 2014.
 
@@ -138,7 +138,7 @@ Figure xx; Spatial distribution of fishing effort by active demersal gears, duri
 * Challenges: none
 * Workload: ?
 * Format/presentation notes/suggestions: 
-* Status: TBD
+* Status: 19-11-15: maps produced w/ kWd as provided by WGSFD-script. Legend still missing -- disproportionate amount of work goes into fixing this ATM.
 
 Table 1. Stock status summary of the last three years for those stocks within the Celtic Seas ecoregion.
 Notes: ACOM December may decide not to include this information in the ICES advice. Therefore, hold off. Several ACOM members expressed the desire to keep this table. This technically isn’t ”fisheries” information. Perhaps it could be an independent product?
