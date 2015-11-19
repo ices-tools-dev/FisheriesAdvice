@@ -1,0 +1,36 @@
+code,description,gear_class,fishing_tech,type
+PS,Purse seines,SURROUNDING NETS,PS,SEINE
+LA,Lampara nets,SURROUNDING NETS,PS,SEINE
+SB,Beach seines,SEINE NETS,DTS,SEINE
+SDN,Danish seines,SEINE NETS,DTS,SEINE
+SSC,Scottish seines,SEINE NETS,DTS,SEINE
+SPR,Pair seines,SEINE NETS,DTS,SEINE
+TBB,Beam trawl,TRAWLS,TBB,BEAM TRAWL
+OTB,Bottom otter trawl,TRAWLS,DTS,OTTER TRAWL
+PTB,Bottom pair trawl,TRAWLS,DTS,PAIR TRAWL
+OTM,Midwater otter trawl,TRAWLS,DTS_or_TM,PELAGIC TRAWL
+PTM,Pelagic pair trawl,TRAWLS,TM,PELAGIC TRAWL
+OTT,Otter twin trawl,TRAWLS,TM,OTTER TRAWL
+DRB,Boat dredges,DREDGES,DRB,DREDGES
+DRH,Hand dredges,DREDGES,DRB,DREDGES
+HMD,Mechanised dredges including suction dredges,DREDGES,DRB,DREDGES
+LNB,Boat-operated lift nets,LIFT NETS,DFN,NETS
+LNS,Shore-operated stationary lift nets,LIFT NETS,DFN,NETS
+GNS,Set gillnets (anchored),GILLNETS AND ENTANGLING NETS,DFN,NETS
+GND,Driftnets,GILLNETS AND ENTANGLING NETS,DFN,NETS
+GNC,Encircling gillnets,GILLNETS AND ENTANGLING NETS,DFN,NETS
+GTR,Trammel nets,GILLNETS AND ENTANGLING NETS,DFN,NETS
+GTN,Combined gillnets-trammel nets,GILLNETS AND ENTANGLING NETS,DFN,NETS
+FPO,Pots,TRAPS,FPO,POTS
+LHP,Handlines and pole-lines (hand-operated),HOOKS AND LINES,HOK,HOOKS AND LINES
+LHM,Handlines and pole-lines (mechanised),HOOKS AND LINES,HOK,HOOKS AND LINES
+LLS,Set longlines,HOOKS AND LINES,HOK,HOOKS AND LINES
+LLD,Drifting longlines,HOOKS AND LINES,HOK,HOOKS AND LINES
+LTL,Troll lines,HOOKS AND LINES,HOK,HOOKS AND LINES
+NK,,GEAR NOT KNOW OR NOT SPECIFIED ,,UNSPECIFIED
+NO,,No gear,,NONE
+FPN,Stationary uncovered pound nets,TRAPS,FPO,TRAPS
+FYK,Fyke nets,TRAPS,FPO,TRAPS
+SV,Beach and boat seine,,,SEINE
+MIS,Miscellaneous Gear,MISC GEAR,,OTHER
+HAR,Harpoons,HARPOONS,,HARPOONS

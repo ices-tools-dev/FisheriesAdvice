@@ -1,0 +1,16 @@
+fishing_tech,description,towed_static
+DFN,Drift and-or fixed netters,Static
+DRB,Dredgers,Towed
+DTS,Demersal trawlers and-or demersal seiners,Towed
+FPO,Vessels using pots and-or traps,Static
+HOK,Vessels using hooks,Static
+INACTIVE,Non active vessels,Inactive
+MGO,Vessel using other active gears,Towed
+MGP,Vessels using polyvalent active gears only,Towed
+PG,Passive Gears,Static
+PGO,Vessels using other passive gears,Static
+PGP,Vessels using polyvalent passive gears only,Static
+PMP,Vessels using active and passive gears,Static
+PS,Purse seiners,Towed
+TBB,Beam trawlers,Towed
+TM,Pelagic trawlers,Towed
