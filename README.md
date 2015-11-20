@@ -28,7 +28,7 @@ Figure 2. Effort (kW days at sea) by nation reported to STECF within the Celtic 
 * Challenges: kWh not available, therefore it must be presented in kW days. Actual kW days at sea is not reported for many countries, 
 * Workload: 
 * Format/presentation notes/suggestions: 
-* Status: Done, but graph looks off, compared to what is already in the advice draft.
+* Status: Done, but graph looks off, compared to what is already in the advice draft. Uploaded to SharePoint & Github.
 
 Figure 3. ICES official landings by species groups within the Celtic Seas ecoregion, 2006-2013.
 
@@ -47,7 +47,7 @@ Figure 3. ICES official landings by species groups within the Celtic Seas ecoreg
 * Challenges:
 * Workload: 
 * Format/presentation notes/suggestions: 
-* Status: Almost done. Minor errors in data (i.e. "var.2" is not a good guild designation)
+* Status: Almost done. Minor errors in data (i.e. "var.2" is not a good guild designation). Uploaded to SharePoint & Github.
 
 Figure 4. Top 10 3 species within each species group for the Celtic Seas ecoregion as reported in the ICES official landings, 2006-2013.
 
@@ -60,10 +60,10 @@ Figure 4. Top 10 3 species within each species group for the Celtic Seas ecoregi
         + SL doesn’t think we need the preliminary data for this.
 * Data needed: ?
 * Responsible person: Thomas
-* Challenges: Guild and Advice grouping is missing for at least 761 species. Correcting this will take more time than is available before deadline.
+* Challenges: Guild and "Advice group" is missing for at least 761 species. Correcting this will take more time than is available before deadline.
 * Workload: 
 * Format/presentation notes/suggestions: 
-* Status: TBD. Will be finished Friday 20-11-15.
+* Status: Finished, uploaded to SharePoint & Github.
 
 Figure 5. EU landings by gear within the Celtic Seas ecoregion as available from STECF data. Note: Spanish data only available for 2012-13.
 
@@ -75,7 +75,7 @@ Figure 5. EU landings by gear within the Celtic Seas ecoregion as available from
 * Challenges: 
 * Workload: 
 * Format/presentation notes/suggestions: 
-* Status: Graphs are similar to fig YY, with other data. Should be finished soon.
+* Status: Finished, uploaded to SharePoint & Github.
 
 Figure 6. Stock trends of F/Fmsy and total landings volumes removed in relation to Fmsy status, separated by demersal and pelagic stocks within the Celtic Seas ecoregion, 1990-2013. Currently only contains the stocks available in the ICES standard graphs database of 2014 advice.
 
