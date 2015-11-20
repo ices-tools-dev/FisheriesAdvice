@@ -60,7 +60,7 @@ Figure 4. Top 10 3 species within each species group for the Celtic Seas ecoregi
         + SL doesn’t think we need the preliminary data for this.
 * Data needed: ?
 * Responsible person: Thomas
-* Challenges: 
+* Challenges: Guild and Advice grouping is missing for at least 761 species. Correcting this will take more time than is available before deadline.
 * Workload: 
 * Format/presentation notes/suggestions: 
 * Status: TBD. Will be finished Friday 20-11-15.
