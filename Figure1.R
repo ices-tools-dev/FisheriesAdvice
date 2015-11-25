@@ -86,7 +86,7 @@ colList <- c(brewer.pal(n = ncol(dataOthers) - 1, name = 'Spectral'), "grey40")
 
 ylim = c(0, max(rowSums(dataOthers, na.rm = T)))
 # 
-png(filename = "~/test1.png",
+png(filename = "~/Fig1.png",
     width = 172.4,
     height = 172.4,
     units = "mm",
