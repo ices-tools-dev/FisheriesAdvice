@@ -34,6 +34,7 @@ Figure 3. ICES official landings by species groups within the Celtic Seas ecoreg
 
 * Notes: Classify the species by agreed guilds/functional groups using top 3 species/guild. 
     + There should be one plot per guild.
+    + Get the species guilds data from Sara Moore (CEFAS)
     + MDC was very interested in economic valuation, in addition to this figure. 
       + It would use JRC or DCF economic valuation data.
 * Current format: stacked graph.
@@ -90,6 +91,10 @@ Figure 6. Stock trends of F/Fmsy and total landings volumes removed in relation 
 * Status: TBD
 
 Figure 7. Kobe-plots of Celtic Seas stocks by category (demersal, pelagic, elasmobranch, Nephrops). (Left) Relative fishing pressure (F/Fmsy) and biomass (SSB/Btrig) for stocks, which have SSB and F related against reference points (msy where available, otherwise pa or qualitative. Stocks in the green region are exploited below Fmsy and have an SSB that is above Btrigger. (Right) Stocks of unknown status in relation to reference points. The size of each bubble corresponds to the landings in 2013. (CURRENTLY DOES NOT INCLUDE ALL CELTIC SEAS STOCKS)
+
+* Try to combine figures 7 and 8.
+* Blue should be grey in figure 8
+
 
 * Notes: 
     + ACOM sub-group does not like the use of stock codes. 
