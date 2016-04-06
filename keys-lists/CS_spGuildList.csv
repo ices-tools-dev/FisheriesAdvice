@@ -1,0 +1,267 @@
+"Species","totalCatch","Scientific_name","English_name","Family","Fisheries.Guild"
+"SCE",280062,"Pecten maximus","Great Atlantic scallop","Pectinidae",NA
+"BOR",265399,"Caproidae","Boarfishes nei","ZEIFORMES",NA
+"CRE",236350,"Cancer pagurus","Edible crab","Cancridae",NA
+"JAX",222152,"Trachurus spp","Jack and horse mackerels nei","PERCOIDEI",NA
+"LQD",213155,"Laminaria digitata","Tangle","PHAEOPHYCEAE",NA
+"WHE",196481,"Buccinum undatum","Whelk","Buccinidae",NA
+"QSC",146338,"Aequipecten opercularis","Queen scallop","Pectinidae",NA
+"MNZ",106003,"Lophius spp","Monkfishes nei","LOPHIIFORMES",NA
+"LAH",73765,"Laminaria hyperborea","North European kelp","1",NA
+"MUS",51876,"Mytilus edulis","Blue mussel","Mytilidae",NA
+"CTL",45933,"Sepiidae, Sepiolidae","Cuttlefish, bobtail squids nei","1",NA
+"SWX",43436,"Algae","Seaweeds nei","1",NA
+"SCR",40031,"Maja squinado","Spinous spider crab","Majidae",NA
+"GKL",35566,"Glycymeris glycymeris","Common European bittersweet","Glycymerididae",NA
+"CTC",27808,"Sepia officinalis","Common cuttlefish","Sepiidae",NA
+"BIB",26409,"Trisopterus luscus","Pouting(=Bib)","Gadidae",NA
+"ARG",24281,"Argentina spp","Argentines","SALMONIFORMES",NA
+"SKA",23823,"Raja spp","Raja rays nei","RAJIFORMES",NA
+"COE",23098,"Conger conger","European conger","Congridae",NA
+"LBE",18866,"Homarus gammarus","European lobster","Nephropidae",NA
+"JOD",15601,"Zeus faber","John dory","Zeidae",NA
+"BRB",14877,"Spondyliosoma cantharus","Black seabream","Sparidae",NA
+"ALB",13453,"Thunnus alalunga","Albacore","Scombridae",NA
+"ARY",12859,"Argentina sphyraena","Argentine","Argentinidae",NA
+"SQC",11831,"Loligo spp","Common squids nei","CEPHALOPODA",NA
+"SQZ",11494,"Loliginidae","Inshore squids nei","CEPHALOPODA",NA
+"GRO",11043,"Osteichthyes","Groundfishes nei","1",NA
+"LIO",9942,"Necora puber","Velvet swimcrab","Portunidae",NA
+"GUX",8933,"Triglidae","Gurnards, searobins nei","SCORPAENIFORMES",NA
+"OYX",8695,"Ostrea spp","Flat oysters nei","BIVALVIA",NA
+"COC",6374,"Cerastoderma edule","Common edible cockle","Cardiidae",NA
+"VEV",6150,"Venus verrucosa","Warty venus","Veneridae",NA
+"GAD",5488,"Gadiformes","Gadiformes nei","1",NA
+"POA",5069,"Brama brama","Atlantic pomfret","Bramidae",NA
+"PEE",5014,"Littorina littorea","Common periwinkle","Littorinidae",NA
+"DGX",4978,"Squalidae","Dogfish sharks nei","SQUALIFORMES",NA
+"VNR",4858,"Venerupis rhomboides","Banded carpet shell","Veneridae",NA
+"OYC",4744,"Crassostrea spp","Cupped oysters nei","BIVALVIA",NA
+"RAZ",4613,"Solen spp","Solen razor clams nei","BIVALVIA",NA
+"BRF",4525,"Helicolenus dactylopterus","Blackbelly rosefish","Scorpaenidae",NA
+"SQI",4399,"Illex illecebrosus","Northern shortfin squid","Ommastrephidae",NA
+"ASN",4267,"Ascophyllum nodosum","North Atlantic rockweed","1",NA
+"VSC",3847,"Chlamys varia","Variegated scallop","Pectinidae",NA
+"CRG",3789,"Carcinus maenas","Green crab","Portunidae",NA
+"OCT",3671,"Octopodidae","Octopuses, etc. nei","CEPHALOPODA",NA
+"GUU",3670,"Chelidonichthys lucerna","Tub gurnard","Triglidae",NA
+"ALC",3288,"Alepocephalus bairdii","Baird's slickhead","Alepocephalidae",NA
+"SRX",3146,"Rajiformes","Rays, stingrays, mantas nei","1",NA
+"SQU",2838,"Loliginidae, Ommastrephidae","Various squids nei","1",NA
+"FOR",2745,"Phycis phycis","Forkbeard","Gadidae",NA
+"SOI",2126,"Solenidae","Razor clams, knife clams nei","BIVALVIA",NA
+"EQI",2037,"Ensis siliqua","Sword razor shell","Solenidae",NA
+"OYF",1986,"Ostrea edulis","European flat oyster","Ostreidae",NA
+"HYD",1965,"Hydrolagus spp","Ratfishes nei","CHIMAERIFORMES",NA
+"SYX",1862,"Scyliorhinidae","Catsharks, etc. nei","CARCHARHINIFORMES",NA
+"SCL",1838,"Scyliorhinus spp","Catsharks, nursehounds nei","CARCHARHINIFORMES",NA
+"DGH",1681,"Squalidae, Scyliorhinidae","Dogfishes and hounds nei","1",NA
+"PER",1611,"Littorina spp","Periwinkles nei","GASTROPODA",NA
+"MAV",1565,"Maurolicus muelleri","Silvery lightfish","1",NA
+"CRS",1478,"Portunus spp","Portunus swimcrabs nei","BRACHYURA",NA
+"KEF",1423,"Chaceon affinis","Deep-sea red crab","Geryonidae",NA
+"RED",1324,"Sebastes spp","Atlantic redfishes nei","SCORPAENIFORMES",NA
+"TPA",1231,"Trachipterus arcticus","Dealfish","Trachipteridae",NA
+"SQE",1225,"Todarodes sagittatus","European flying squid","Ommastrephidae",NA
+"MYV",1186,"Mytilus spp","Mytilus mussels nei","BIVALVIA",NA
+"CMO",1110,"Chimaera monstrosa","Rabbit fish","Chimaeridae",NA
+"SFS",1108,"Lepidopus caudatus","Silver scabbardfish","Trichiuridae",NA
+"SBX",1064,"Sparidae","Porgies, seabreams nei","PERCOIDEI",NA
+"MSX",1035,"Mytilidae","Sea mussels nei","BIVALVIA",NA
+"MUL",967,"Mugilidae","Mullets nei","MUGILIFORMES",NA
+"SBG",877,"Sparus aurata","Gilthead seabream","Sparidae",NA
+"DPX",839,"Perciformes","Demersal percomorphs nei","1",NA
+"SMD",839,"Mustelus mustelus","Smooth-hound","Triakidae",NA
+"OCM",826,"Eledone spp","Horned and musky octopuses","CEPHALOPODA",NA
+"SWB",732,"Phaeophyceae","Brown seaweeds","1",NA
+"EQE",694,"Ensis ensis","Pod razor shell","Solenidae",NA
+"SWA",664,"Diplodus sargus","White seabream","Sparidae",NA
+"CLX",650,"Bivalvia","Clams, etc. nei","1",NA
+"DGZ",643,"Squalus spp","Dogfishes nei","SQUALIFORMES",NA
+"CSH",615,"Crangon crangon","Common shrimp","Crangonidae",NA
+"MGS",607,"Mugil spp","Mugilidae","",NA
+"MLR",601,"Chelon labrosus","Thicklip grey mullet","MUGILIFORMES",NA
+"SCX",563,"Pectinidae","Scallops nei","BIVALVIA",NA
+"PAL",534,"Palaemonidae","Palaemonid shrimps nei","NATANTIA",NA
+"USB",503,"Labrus bergylta","Ballan wrasse","Labridae",NA
+"SKH",481,"Selachimorpha (Pleurotremata)","Various sharks nei","1",NA
+"OMZ",467,"Ommastrephidae","Ommastrephidae squids nei","CEPHALOPODA",NA
+"OCZ",447,"Octopus spp","Octopuses nei","CEPHALOPODA",NA
+"SOS",440,"Solea lascaris","Sand sole","Soleidae",NA
+"WRF",425,"Polyprion americanus","Wreckfish","Polyprionidae",NA
+"ILL",411,"Illex spp","Shortfin squids nei","CEPHALOPODA",NA
+"RJO",405,"Raja oxyrinchus","Longnosed skate","Rajidae",NA
+"BSH",376,"Prionace glauca","Blue shark","Carcharhinidae",NA
+"CRR",370,"Chaceon quinquedens","Red crab","Geryonidae",NA
+"CLJ",360,"Ruditapes philippinarum","Japanese carpet shell","Veneridae",NA
+"CLH",358,"Mercenaria mercenaria","Northern quahog(=Hard clam)","Veneridae",NA
+"CPR",347,"Palaemon serratus","Common prawn","Palaemonidae",NA
+"RIB",339,"Mora moro","Common mora","Moridae",NA
+"ROL",313,"Gaidropsarus spp","Rocklings nei","GADIFORMES",NA
+"HLT",303,"Haliotis tuberculata","Tuberculate abalone","Haliotidae",NA
+"CYP",261,"Centroscymnus crepidater","Longnose velvet dogfish","Squalidae",NA
+"CRW",251,"Palinurus spp","Palinurid spiny lobsters nei","REPTANTIA",NA
+"ULO",246,"Spisula solida","Solid surf clam","BIVALVIA",NA
+"ULV",237,"Spisula ovalis","Oval surf clam","BIVALVIA",NA
+"TPS",220,"Ruditapes spp","Carpet shells nei","BIVALVIA",NA
+"CLE",216,"Clupeonella engrauliformis","Anchovy sprat","0",NA
+"CAT",212,"Anarhichas spp","Wolffishes(=Catfishes) nei","ZOARCOIDEI",NA
+"MOL",198,"Mollusca","Marine molluscs nei","1",NA
+"WRA",190,"Labridae","Wrasses, hogfishes, etc. nei","PERCOIDEI",NA
+"LAX",190,"Notoscopelus spp","Patchwork lampfishes","",NA
+"SCO",188,"Scorpaenidae","Scorpionfishes nei","SCORPAENIFORMES",NA
+"MAS",175,"Scomber japonicus","Chub mackerel","Scombridae",NA
+"CTZ",156,"Chelidonichthys lastoviza","Streaked gurnard","1",NA
+"CRA",151,"Brachyura","Marine crabs nei","1",NA
+"HAL",148,"Hippoglossus hippoglossus","Atlantic halibut","Pleuronectidae",NA
+"CAR",145,"Chondrichthyes","Cartilaginous fishes nei","0",NA
+"BFT",144,"Thunnus thynnus","Atlantic bluefin tuna","Scombridae",NA
+"MAX",137,"Scombridae","Mackerels nei","SCOMBROIDEI",NA
+"SLO",131,"Palinurus elephas","Common spiny lobster","Palinuridae",NA
+"DCP",118,"Natantia","Natantian decapods nei","1",NA
+"GUP",118,"Centrophorus granulosus","Gulper shark","Squalidae",NA
+"CLB",103,"Spisula solidissima","Atlantic surf clam","Mactridae",NA
+"EPI",102,"Epigonus telescopus","Black cardinal fish","Epigonidae",NA
+"SKX",99,"Elasmobranchii","Sharks, rays, skates, etc. nei","1",NA
+"PAC",99,"Pagellus erythrinus","Common pandora","Sparidae",NA
+"BXD",94,"Beryx decadactylus","Alfonsino","Berycidae",NA
+"CRU",93,"Crustacea","Marine crustaceans nei","1",NA
+"CAA",91,"Anarhichas lupus","Atlantic wolffish","Anarhichadidae",NA
+"HMM",88,"Trachurus mediterraneus","Mediterranean horse mackerel","Carangidae",NA
+"BON",77,"Sarda sarda","Atlantic bonito","Scombridae",NA
+"FOX",77,"Phycis spp","Forkbeards nei","GADIFORMES",NA
+"BYS",76,"Beryx splendens","Splendid alfonsino","Berycidae",NA
+"MGR",63,"Argyrosomus regius","Meagre","Sciaenidae",NA
+"CEP",62,"Cephalopoda","Cephalopods nei","1",NA
+"MKG",61,"Microchirus variegatus","Thickback sole","0",NA
+"GAR",60,"Belone belone","Garfish","Belonidae",NA
+"SYR",58,"Scymnodon ringens","Knifetooth dogfish","Squalidae",NA
+"FLX",57,"Pleuronectiformes","Flatfishes nei","1",NA
+"SHD",55,"Alosa alosa, A. fallax","Allis and twaite shads","CLUPEIFORMES",NA
+"JAD",54,"Raja nidarosiensis","Norwegian skate","Rajidae",NA
+"CXF",54,"Centroberyx affinis","Redfish","BERYCIFORMES",NA
+"BRX",53,"Berycidae","Alfonsinos, etc. nei","BERYCIFORMES",NA
+"CFB",51,"Centroscyllium fabricii","Black dogfish","Squalidae",NA
+"KDF",50,"Crepidula fornicata","American slipper-limpet","Crepidulidae",NA
+"SSD",49,"Spisula spp","Surf clams nei","1",NA
+"HKW",45,"Urophycis tenuis","White hake","Gadidae",NA
+"CEN",41,"Centrolophidae","Ruffs, barrelfishes nei","STROMATEOIDEI, ANABANTOIDEI",NA
+"OCC",40,"Octopus vulgaris","Common octopus","Octopodidae",NA
+"SWO",39,"Xiphias gladius","Swordfish","Xiphiidae",NA
+"DEA",39,"Dentex angolensis","Angolan dentex","Sparidae",NA
+"DON",39,"Donax spp","Donax clams","BIVALVIA",NA
+"TRK",39,"Triakidae","Houndsharks, smoothhounds nei","CARCHARHINIFORMES",NA
+"GPD",36,"Epinephelus marginatus","Dusky grouper","Serranidae",NA
+"TUN",34,"Thunnini","Tunas nei","SCOMBROIDEI",NA
+"MOR",34,"Moridae","Moras nei","GADIFORMES",NA
+"MGA",32,"Liza aurata","Golden grey mullet","Mugilidae",NA
+"CGX",31,"Carangidae","Carangids nei","PERCOIDEI",NA
+"RPG",31,"Pagrus pagrus","Red porgy","Sparidae",NA
+"ALV",29,"Alopias vulpinus","Thresher","Alopiidae",NA
+"SBP",28,"Pagrus spp","Pargo breams nei","PERCOIDEI",NA
+"LOQ",26,"Galatheidae","Craylets, squat lobsters","ANOMURA",NA
+"SCS",26,"Scorpaena spp","Scorpionfishes, rockfishes nei","SCORPAENIFORMES",NA
+"CUT",24,"Trichiuridae","Hairtails, scabbardfishes nei","SCOMBROIDEI",NA
+"MUF",23,"Mugil cephalus","Flathead grey mullet","Mugilidae",NA
+"OSG",23,"Spectrunculus grandis","(Günther 1877)","",NA
+"GAU",20,"Galeus spp","Crest-tail catsharks nei","CARCHARHINIFORMES",NA
+"PEN",20,"Penaeus spp","Penaeus shrimps nei","NATANTIA",NA
+"ETR",20,"Etmopterus princeps","Great lanternshark","Squalidae",NA
+"SME",19,"Osmerus eperlanus","European smelt","Osmeridae",NA
+"CET",18,"Dicologlossa cuneata","Wedge sole","Soleidae",NA
+"SHL",18,"Etmopterus spp","Lanternsharks nei","SQUALIFORMES",NA
+"WEG",16,"Trachinus draco","Greater weever","Trachinidae",NA
+"JDP",16,"Dasyatis pastinaca","Common stingray","Dasyatidae",NA
+"CMM",16,"Corbicula manilensis","Manila clam","Corbiculidae",NA
+"MUX",15,"Mullus spp","Surmullets(=Red mullets) nei","PERCOIDEI",NA
+"THS",15,"Microchirus spp","Thickback soles nei","PLEURONECTIFORMES",NA
+"CLS",15,"Mya arenaria","Sand gaper","Myidae",NA
+"SQS",15,"Martialia hyadesi","Sevenstar flying squid","Ommastrephidae",NA
+"BSX",14,"Serranidae","Groupers, seabasses nei","PERCOIDEI",NA
+"ELX",14,"Anguilla spp","River eels nei","ANGUILLIFORMES",NA
+"KLK",14,"Callista chione","Smooth callista","Veneridae",NA
+"SRG",13,"Diplodus spp","Sargo breams nei","PERCOIDEI",NA
+"TJX",13,"Trachyscorpia cristulata","Atlantic thornyhead","0",NA
+"PAN",13,"Pandalus spp","Pandalus shrimps nei","NATANTIA",NA
+"IAR",12,"Sepia orbignyana","Pink cuttlefish","Sepiidae",NA
+"SDS",12,"Mustelus asterias","Starry smooth-hound","Triakidae",NA
+"KFA",12,"Circomphalus casinus","Chamber venus","Veneridae",NA
+"OST",12,"Ostreidae","Flat and cupped oysters nei","BIVALVIA",NA
+"UCA",12,"Umbrina canariensis","Canary drum(=Baardman)","Sciaenidae",NA
+"APO",11,"Apogonidae","Cardinalfishes, etc. nei","PERCOIDEI",NA
+"SBA",11,"Pagellus acarne","Axillary seabream","Sparidae",NA
+"LXX",11,"Myctophidae","Lanternfishes nei","MYCTOPHIFORMES",NA
+"DCA",10,"Deania calcea","Birdbeak dogfish","Squalidae",NA
+"HOL",10,"Chimaeriformes","Chimaeras, etc. nei","1",NA
+"TRP",10,"Trachipterus spp","Dealfishes","",NA
+"EOI",9,"Eledone cirrhosa","Horned octopus","Octopodidae",NA
+"SIL",9,"Atherinidae","Silversides(=Sand smelts) nei","ATHERINIFORMES",NA
+"CTG",9,"Ruditapes decussatus","Grooved carpet shell","Veneridae",NA
+"DPS",9,"Parapenaeus longirostris","Deep-water rose shrimp","Penaeidae",NA
+"RSE",9,"Scorpaena scrofa","Red scorpionfish","Scorpaenidae",NA
+"BAR",8,"Sphyraena spp","Barracudas nei","OTHER PERCIFORMES",NA
+"FPP",8,"Sander lucioperca","Pike-perch","Percidae",NA
+"SBL",8,"Hexanchus griseus","Bluntnose sixgill shark","Hexanchidae",NA
+"TWL",8,"Tellina spp","Tellins nei","BIVALVIA",NA
+"OYG",8,"Crassostrea gigas","Pacific cupped oyster","Ostreidae",NA
+"LOX",7,"Reptantia","Lobsters nei","1",NA
+"PLA",7,"Hippoglossoides platessoides","Amer. plaice(=Long rough dab)","Pleuronectidae",NA
+"SQR",7,"Loligo vulgaris","European squid","Loliginidae",NA
+"SDU",7,"Deania profundorum","Arrowhead dogfish","Squalidae",NA
+"SOX",7,"Soleidae","Soles nei","PLEURONECTIFORMES",NA
+"LHT",6,"Trichiurus lepturus","Largehead hairtail","Trichiuridae",NA
+"YFT",6,"Thunnus albacares","Yellowfin tuna","Scombridae",NA
+"BBS",6,"Scorpaena porcus","Black scorpionfish","Scorpaenidae",NA
+"DEX",5,"Dentex spp","Dentex nei","PERCOIDEI",NA
+"AMB",4,"Seriola dumerili","Greater amberjack","Carangidae",NA
+"GRV",4,"Macrourus spp","Grenadiers nei","GADIFORMES",NA
+"RBF",4,"Rhinobatos punctifer","Compagno & Randall 1987","",NA
+"RJG",4,"Raja hyperborea","Arctic skate","Rajidae",NA
+"BOG",3,"Boops boops","Bogue","Sparidae",NA
+"POD",3,"Trisopterus minutus","Poor cod","Gadidae",NA
+"PRC",3,"Percoidei","Percoids nei","1",NA
+"ANG",3,"Lophius americanus","American angler","Lophiidae",NA
+"APU",3,"Acipenser sturio","Sturgeon","Acipenseridae",NA
+"MYL",3,"Myliobatis aquila","Common eagle ray","Myliobatidae",NA
+"OLV",3,"Paromola cuvieri","Paromola","Homolidae",NA
+"SCA",3,"Placopecten magellanicus","American sea scallop","Pectinidae",NA
+"SPC",3,"Spicara smaris","Picarel","Centracanthidae",NA
+"VLO",3,"Palinuridae","Spiny lobsters nei","REPTANTIA",NA
+"CAB",3,"Anarhichas denticulatus","Northern wolffish","Anarhichadidae",NA
+"KCS",3,"Paralithodes spp","King crabs","ANOMURA",NA
+"API",2,"Apristurus spp","Deep-water catsharks","CARCHARHINIFORMES",NA
+"SAU",2,"Scomberesox saurus","Atlantic saury","Scomberesocidae",NA
+"BOY",2,"Bolinus brandaris","Purple dye murex","Muricidae",NA
+"DOL",2,"Coryphaena hippurus","Common dolphinfish","Coryphaenidae",NA
+"FCP",2,"Cyprinus carpio","Common carp","Cyprinidae",NA
+"FLW",2,"Pseudopleuronectes americanus","Winter flounder","Pleuronectidae",NA
+"IOD",2,"Liocarcinus depurator","Blue-leg swimcrab","Portunidae",NA
+"MGC",2,"Liza ramada","Thinlip grey mullet","Mugilidae",NA
+"PCB",2,"Pollicipes pollicipes","Barnacle","Pollicipedidae",NA
+"RJY",2,"Raja fyllae","Round ray","Rajidae",NA
+"SPU",2,"Dicentrarchus punctatus","Spotted seabass","Moronidae",NA
+"TUS",2,"Thunnus spp","True tunas nei","SCOMBROIDEI",NA
+"CAS",2,"Anarhichas minor","Spotted wolffish","Anarhichadidae",NA
+"SQL",2,"Loligo pealeii","Longfin squid","Loliginidae",NA
+"COX",2,"Congridae","Conger eels, etc. nei","ANGUILLIFORMES",NA
+"CUX",1,"Holothuroidea","Sea cucumbers nei","1",NA
+"GAS",1,"Gastropoda","Gastropods nei","1",NA
+"JRS",1,"Raja asterias","Mediterranean starry ray","Rajidae",NA
+"MSK",1,"Lamnidae","Mackerel sharks,porbeagles nei","LAMNIFORMES",NA
+"OXN",1,"Oxynotus paradoxus","Sailfin roughshark","Oxynotidae",NA
+"SLX",1,"Salmonoidei","Salmonoids nei","1",NA
+"SMA",1,"Isurus oxyrinchus","Shortfin mako","Lamnidae",NA
+"ANT",1,"Antimora rostrata","Blue antimora","Moridae",NA
+"CLV",1,"Veneridae","Venus clams nei","BIVALVIA",NA
+"KGX",1,"Scomberomorus spp","Seerfishes nei","SCOMBROIDEI",NA
+"LEE",1,"Lichia amia","Leerfish","Carangidae",NA
+"LTA",1,"Euthynnus alletteratus","Little tunny(=Atl.black skipj)","Scombridae",NA
+"PLZ",1,"Pleuronectidae","Righteye flounders nei","PLEURONECTIFORMES",NA
+"QUB",1,"Squalus blainville","Longnose spurdog","Squalidae",NA
+"TOM",1,"Microgadus tomcod","Atlantic tomcod","Gadidae",NA
+"TTR",1,"Torpedo marmorata","Marbled electric ray","Torpedinidae",NA
+"URX",1,"Echinoidea","Sea urchins, etc. nei","1",NA
+"SDH",1,"Deania hystricosa","Rough longnose dogfish","Squalidae",NA
+"TIG",1,"Galeocerdo cuvier","Tiger shark","Carcharhinidae",NA
+"GDG",1,"Gadiculus argenteus","Silvery pout","Gadidae",NA
+"BLM",1,"Makaira indica","Black marlin","Istiophoridae",NA
