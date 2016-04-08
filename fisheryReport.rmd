@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 6.5, fig.height = 4.5, fig.path = '')
 # devtools::install_github("ICES-dk/rICES", force = FALSE)
 # devtools::install_github("hadley/readxl", force = FALSE)
 library(rICES)
@@ -19,14 +19,13 @@ library(stringr)
 library(reshape2)
 library(ggplot2)
 #
-# library(plyr)
-# library(RColorBrewer)
-# library(extrafont)
-
-# 
 plotDir = "output/"
 options(scipen = 5)
-# 
+#
+
+```
+
+```{r getDat, include = FALSE, cache = TRUE}
 catchURL <- "http://ices.dk/marine-data/Documents/CatchStats/OfficialNominalCatches.zip"
 effortURL <- "http://stecf.jrc.ec.europa.eu/documents/43805/870977/2014_STECF+14-20+-+Fishing+Effort+Regimes+data+tables.zip"
 spURL <- "ftp://ftp.fao.org/FI/STAT/DATA/ASFIS_sp.zip"
@@ -39,6 +38,9 @@ download.file(catchURL, destfile = tmpFileCatch, mode = "wb", quiet = T)
 download.file(effortURL, destfile = tmpFileEffort, mode = "wb", quiet = T)
 download.file(spURL, destfile = tmpFileSp, mode = "wb", quiet = T)
 # 
+#```
+
+#```{r loadDat, include = FALSE}
 catchDat <- read.csv(unz(tmpFileCatch,
                          "ICESCatchDataset2006-2014.csv"),
                      stringsAsFactors = F, header = T, fill = TRUE)
@@ -48,29 +50,28 @@ effortDat <- read_excel(unzip(tmpFileEffort,
                               files = "Electronic_appendices/Effort_trends_by_country.xlsx"),
                         sheet = "kWdays at sea")
 # 
+stecfCatchDat <- read_excel(unzip(tmpFileEffort, 
+                                  files = "Electronic_appendices/Landings_Discards_Discard-rates.xlsx"),
+                            sheet = "Land_Disc_Disc-rate_by_Country")
+# 
 spList <- read.table(unz(tmpFileSp,
                          "ASFIS_sp_Feb_2015.txt"),
                      header = TRUE,
                      fill = TRUE,
                      stringsAsFactors = FALSE)
+# 
 # FAO codes and ICES stock codes 
 speciesID <- read.csv("~/rCode/Data/ICESspeciesID_v1.csv",
                       stringsAsFactors = FALSE)
+# 
 # Fishery guilds by ICES stock code
 fisheryGuild <- read.csv("~/git/ices-dk/rStockOverview/fisheryGuild.csv",
                          stringsAsFactors = FALSE)
+# 
 fisheryGuild$speciesID <- toupper(gsub( "-.*$", "", fisheryGuild$Stock.code))
 # 
 fisheryGuild <- fisheryGuild %>%
   inner_join(speciesID, c("speciesID" = "oldCode")) 
-# 
-# spList <- read.csv("https://raw.githubusercontent.com/ICES-dk/FisheriesAdvice/master/keys-lists/species.list",
-#                    stringsAsFactors = FALSE)
-# 
-# Might not be needed anymore
-# guildList <- read.csv("https://raw.githubusercontent.com/ICES-dk/FisheriesAdvice/master/keys-lists/guild.list",
-#                       stringsAsFactors = FALSE)
-#  
 # 
 ecoAreaCatch <- toupper(c("27.7.a",
                           "27.7.b", 
@@ -86,7 +87,7 @@ ecoAreaCatch <- toupper(c("27.7.a",
                           "27.6.b.2"))
 # 
 # https://datacollection.jrc.ec.europa.eu/c/document_library/get_file?uuid=62841ee4-dbbd-4628-a7a7-5036ce5d415b&groupId=10213
-ecoAreaEffort <- c("6 EU", "7BCEFGHJK")
+ecoAreaEffort <- c("6 EU", "3C", "7BCEFGHJK") # Looks wrong, but 3c is STEFC for 7a
 # 
 guildList <- 
   catchDat %>%
@@ -107,10 +108,8 @@ guildList <-
          totalCatch > 0) %>%
   distinct(Scientific_name)
 # 
-write.csv(guildList, file = "~/git/ices-dk/FisheriesAdvice/keys-lists/CS_spGuildList.csv",
-          row.names = FALSE)
-
-
+# write.csv(guildList, file = "~/git/ices-dk/FisheriesAdvice/keys-lists/CS_spGuildList.csv",
+#           row.names = FALSE)
 ```
 
 ```{r catchDat, include = FALSE}
@@ -122,31 +121,16 @@ catchDat <-
                    variable.name = "YEAR",
                    value.name = "VALUE") %>%
   mutate(YEAR = as.numeric(gsub("X", "", YEAR)))
-
-
-
-
-str(tt)
-unique(tt$Scientific_name)
-str(guildList)
-tr <- guildList[!guildList$scientific.name %in% tt$Scientific_name,]
-tv <- spList[!spList$X3A_CODE %in% catchDat$Species,]
-# tv <- catchDat[!catchDat$Species %in% spList$X3A_CODE,]
-
-guil <- data.frame(SCI = unique(tt$scientific_name))
-
 #
 catchCountry <- catchDat %>%
   group_by(YEAR, Country) %>%
   dplyr::summarize(countryCatch = sum(VALUE)) # %>% # Total annual catch
 # Convert country codes to proper names
 #
-
-
-
 ```
 
-```{r figure1, echo = FALSE, include = TRUE}
+```{r figure1, echo = FALSE, include = TRUE, fig.cap= "Figure 1. Landings (tonnes) by nation within the Celtic Seas ecoregion (ICES areas: 6a, 6b.2, 6b.NK, 7a, 7b, 7c.2, 7e, 7f, 7g, 7h, 7j.2, 7k.2), as reported to ICES."}
+# 
 catchPlot <- catchCountry %>%
   group_by(Country) %>%
   dplyr::summarize(countryTotal = sum(countryCatch)) %>% # Overall catch to order plot
@@ -167,22 +151,33 @@ ggplot(catchPlot, aes(x = YEAR, y = countryCatch)) +
   scale_fill_manual(values = myColors) +
   scale_color_manual(values = myColors) +
   labs(x = "Year",
-       y = "Nominal Catch (tonnes)") +
+       y = "Landings (tonnes)",
+       fill = "Country",
+       color = "Country") +
   theme_bw() 
+  # ggsave(filename = paste0(plotDir, "CS_FisheryOverview-figure1.png"), width = 6.5,
+  #        height = 4.5)
 # 
 ```
+### Figure 1 corrections
+* Country names and colors should be consistent between Figure 1 and 2. Need to make a look-up table between STECF and ICES country codes
+* Merge UK with Scotland (Northern Ireland, Jersey, etc.)
+* Explore pre-2006 up to 1990
+** Not exactly straight-forward to add this info
+* Spain may be missing? Double check
+
 
 
 ```{r effortDat, include = FALSE}
 effortDat <-
-# tt <- 
+# tt <-
   effortDat %>%
   Filter(f = function(x)!all(is.na(x))) %>%
   filter(reg_area_cod %in% ecoAreaEffort) %>%
   melt(id.vars = c("annex", "reg_area_cod", "reg_gear_cod", "Specon_calc", "country", "vessel_length"), 
        variable.name = "YEAR",
        value.name = "VALUE") %>%
-  mutate(YEAR = as.numeric(YEAR))
+  mutate(YEAR = as.numeric(levels(YEAR))[YEAR])
 #
 effortCountry <- effortDat %>%
   group_by(YEAR, country) %>%
@@ -192,14 +187,14 @@ effortCountry <- effortDat %>%
 ```
 
 
-```{r figure2, echo = FALSE, include = TRUE}
+```{r figure2, echo = FALSE, include = TRUE, fig.cap= "Figure 2. Effort (kW days at sea) by nation within the Celtic Seas ecoregion (6 EU and 7a, 7b, 7c, 7e, 7f, 7g, 7h, 7j, 7k), as reported to STECF."}
 effortPlot <- effortCountry %>%
   group_by(country) %>%
   dplyr::summarize(countryTotal = sum(countryEffort)) %>% # Overall catch to order plot
   arrange(-countryTotal) %>%
   dplyr::mutate(RANK = min_rank(desc(countryTotal))) %>% 
   inner_join(effortCountry, c("country" = "country")) %>%
-  dplyr::mutate(country = replace(country, RANK > 9, "OTHER")) %>%
+  dplyr::mutate(country = replace(country, RANK > 9, "OTHER"))%>%
   group_by(YEAR, country) %>%
   dplyr::mutate(countryEffort = sum(countryEffort)) %>%
   distinct(YEAR, country)
@@ -210,16 +205,181 @@ names(myColors) <- levels(effortPlot$country)
 #
 ggplot(effortPlot, aes(x = YEAR, y = countryEffort)) +
   geom_area(aes(fill = country, color = country), alpha = .8, position = "stack") +
+  # scale_x_continuous(limits = range(effortPlot$YEAR), breaks = seq(from = min(effortPlot$YEAR),
+  #                                                                  to = max(effortPlot$YEAR, 
+  #                                                                      by = .5))) +
   scale_fill_manual(values = myColors) +
   scale_color_manual(values = myColors) +
   labs(x = "Year",
-       y = "Effort (kW days at sea)") +
+       y = "Effort (kW days at sea)",
+       fill = "Country",
+       color = "Country") +
   theme_bw() 
+  # ggsave(filename = paste0(plotDir, "CS_FisheryOverview-figure2.png"), width = 6.5,
+  #        height = 4.5)
 ```
 
-## Guild and ecoregion
+## Figure 2 corrections
+* (see figure 1: Country names and colors should be consistent between Figure 1 and 2. Need to make a look-up table between STECF and ICES country codes)
+* [STECF Reference Metadata](https://datacollection.jrc.ec.europa.eu/c/document_library/get_file?uuid=62841ee4-dbbd-4628-a7a7-5036ce5d415b&groupId=10213) claims that 3c == ICES subarea 7a. Double check
+* Check the effort data years... might be an ordinal/nominal issue
+* Explore the RDB... should have access
 
-The following stocks, guilds, and ecoregions have been included in the overview. F~MSY~ F, SSB, and MSY B~trigger~ were downloaded from [ICES Stock Assessment Graphs](http://ices.dk/marine-data/tools/Pages/stock-assessment-graphs.aspx). Click the links to see the [aggregated data](https://github.com/ICES-dk/rStockOverview/blob/master/NordicCouncilRefPoints.csv) and [R code](https://github.com/ICES-dk/rStockOverview/blob/master/nordicIndicators.rmd) used to download and plot  [Figure 1](https://github.com/ICES-dk/rStockOverview/blob/master/output/NordicCouncilRefPoints_ALL.png) and [Figure 2](https://github.com/ICES-dk/rStockOverview/blob/master/output/NordicCouncilRefPoints_ecoregion-guild.png).
+
+```{r guildDat, include = FALSE}
+guildDat <-
+  catchDat %>%
+  inner_join(spList, c("Species" = "X3A_CODE")) %>%
+  full_join(fisheryGuild, c("Species" = "newCode")) 
+#
+guildCatch <- 
+  guildDat %>%
+  dplyr::mutate(Fisheries.Guild = ifelse(is.na(Fisheries.Guild), "not defined", Fisheries.Guild)) %>%
+  group_by(YEAR, Fisheries.Guild) %>%
+  dplyr::summarize(guildCatch = sum(VALUE, na.rm = TRUE)) %>% 
+  filter(!is.na(YEAR))
+#
+```
+
+```{r figure3, echo = FALSE, include = TRUE, fig.cap= "Figure 3. Catch (tonnes) by fishery guild within the Celtic Seas ecoregion(6a, 6b.2, 6b.NK, 7a, 7b, 7c.2, 7e, 7f, 7g, 7h, 7j.2, 7k.2)"}
+guildPlot <- guildCatch %>%
+  group_by(Fisheries.Guild) %>%
+  dplyr::summarize(guildTotal = sum(guildCatch, na.rm = TRUE)) %>% # Overall catch to order plot
+  arrange(-guildTotal) %>%
+  dplyr::mutate(RANK = min_rank(desc(guildTotal))) %>% 
+  inner_join(guildCatch, c("Fisheries.Guild" = "Fisheries.Guild")) %>%
+  dplyr::mutate(Fisheries.Guild = replace(Fisheries.Guild, RANK > 9, "OTHER")) %>%
+  group_by(YEAR, Fisheries.Guild) %>%
+  dplyr::mutate(guildCatch = sum(guildCatch)) %>%
+  distinct(YEAR, Fisheries.Guild)
+# 
+guildPlot$Fisheries.Guild <- factor(guildPlot$Fisheries.Guild, levels = rev(unique(guildPlot$Fisheries.Guild)))
+myColors <- c("grey40", brewer.pal(length(unique(guildPlot$Fisheries.Guild)) - 1, "Spectral"))
+names(myColors) <- levels(guildPlot$Fisheries.Guild)
+#
+ggplot(guildPlot, aes(x = YEAR, y = guildCatch)) +
+  geom_area(aes(fill = Fisheries.Guild, color = Fisheries.Guild), alpha = .8, position = "stack") +
+  scale_fill_manual(values = myColors) +
+  scale_color_manual(values = myColors) +
+  labs(x = "Year",
+       y = "Nominal Catch (tonnes)",
+       fill = "Fishery guild",
+       color = "Fishery guild") +
+  theme_bw() 
+  # ggsave(filename = paste0(plotDir, "CS_FisheryOverview-figure3.png"), width = 6.5,
+  #        height = 4.5)
+```
+## Figure 3 corrections
+* define "not defined" fishery guilds.
+
+
+
+
+```{r speciesCatch, include = FALSE}
+spDat <-
+  catchDat %>%
+  inner_join(spList, c("Species" = "X3A_CODE")) 
+#
+spCatch <- 
+  spDat %>%
+  dplyr::mutate(English_name = ifelse(is.na(English_name), "not defined", English_name))
+
+```
+
+```{r  figure4, echo = FALSE, include = TRUE, fig.cap= "Figure 4. Landings (tonnes) reported to ICES for the 10 species with the greatest gross tonneage within the Celtic Seas ecoregion (6a, 6b.2, 6b.NK, 7a, 7b, 7c.2, 7e, 7f, 7g, 7h, 7j.2, 7k.2)"}
+# 
+spPlot <- spCatch %>%
+  group_by(Species) %>%
+  dplyr::summarize(spTotal = sum(VALUE, na.rm = TRUE)) %>% # Overall catch to order plot
+  arrange(-spTotal) %>%
+  dplyr::mutate(RANK = min_rank(desc(spTotal))) %>% 
+  inner_join(spCatch, c("Species" = "Species")) %>%
+  dplyr::mutate(Species = replace(Species, RANK > 9, "OTHER"),
+                English_name = replace(English_name, RANK > 9, "OTHER")) %>%
+  group_by(YEAR, Species, English_name) %>%
+  dplyr::mutate(spCatch = sum(VALUE, na.rm = TRUE)) %>%
+  distinct(YEAR, Species)
+# 
+spPlot$English_name <- factor(spPlot$English_name, levels = rev(unique(spPlot$English_name)))
+myColors <- c("grey40", brewer.pal(length(unique(spPlot$English_name)) - 1, "Spectral"))
+names(myColors) <- levels(spPlot$English_name)
+#
+ggplot(spPlot, aes(x = YEAR, y = spCatch)) +
+  geom_area(aes(fill = English_name, color = English_name), alpha = .8, position = "stack") +
+  scale_fill_manual(values = myColors) +
+  scale_color_manual(values = myColors) +
+  labs(x = "Year",
+       y = "Nominal Catch (tonnes)",
+       fill = "Common name",
+       color = "Common name") +
+  theme_bw() 
+  # ggsave(filename = paste0(plotDir, "CS_FisheryOverview-figure4.png"), width = 6.5,
+  #        height = 4.5)
+```
+## Figure 4 corrections
+* Remove "nei" and "(=Poutassou)" type additions to the FAO species name list
+
+
+```{r gearEffort, include = FALSE}
+stecfCatchDat <-
+# tt <-
+  stecfCatchDat %>%
+  # Filter(f = function(x)!all(is.na(x))) %>%
+  filter(reg_area %in% ecoAreaEffort) %>%
+  melt(id.vars = c("annex", "reg_area", "country", "reg_gear", "specon", "species"), 
+       variable.name = "YEAR",
+       value.name = "VALUE") %>%
+  mutate(METRIC = as.character(gsub(".*\\s", "", YEAR)),
+         YEAR = as.numeric(gsub("\\s.+$", "", YEAR))) %>%
+  filter(METRIC == "L")
+#
+catchGear <- stecfCatchDat %>%
+  group_by(YEAR, reg_gear) %>%
+  dplyr::summarize(gearEffort = sum(VALUE, na.rm = T)) # %>% # Total annual catch
+# Convert country codes to proper names
+
+
+```
+
+```{r figure5, echo = FALSE, include = TRUE, fig.cap= "Figure 5.  Catch (tonnes) by gear reported to STECF within the Celtic Seas ecoregion (6 EU and 7a, 7b, 7c, 7e, 7f, 7g, 7h, 7j, 7k)"}
+
+
+```
+## Figure 5 corrections
+* Find where this data is in STECF data...
+* Metier overviews
+
+
+## Table 1 will be an annex
+* Add Fpa and Bpa as additional columns.
+
+## Table will be number of stocks above and below reference points total and then divided into fishery guilds
+
+
+
+
+## Figure YY
+* No pair trawl
+* Demersal trawl
+
+## Figure 6 (split into 2)
+* yellow should be red
+* red should be grey
+* Should we use catch? 
+* Should we repeat Fmsy with Fpa? - no
+* Use landings for the time being
+
+## Pie graph should be a table as a summary beneath the stock status (tick mark table) 
+
+## Figure 7
+* Change the colors (red, green and grey). Yellow should be red
+* Fishery guild not trophic guild
+* Absolute bar graphs instead of log
+* For the time being use landings
+
+[Celtic Seas Fishery Advice](https://community.ices.dk/Advice/Advice2016/CelticSea/_layouts/15/WopiFrame.aspx?sourcedoc=/Advice/Advice2016/CelticSea/Draft_advice/CelticSeasEcoregion_FisheriesOverviews.docx&action=default)
+
+
 
 For questions, please email <A HREF="mailto:scott.large@ices.dk?subject=Nordic Council plots">scott.large@ices.dk</A>.
 
