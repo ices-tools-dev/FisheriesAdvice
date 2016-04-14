@@ -3,7 +3,7 @@ author: ""
 date: '`r strftime(Sys.time(), format = "%d %B %Y")`'
 output: html_document
 params:
-  set_title: X
+  set_title: default
 ---
 
 ---
@@ -19,43 +19,99 @@ catchCountry <- catchDatECO %>%
 ```
 
 ```{r figure1, echo = FALSE, include = TRUE}
-# 
+#
 catchPlot <- catchCountry %>%
   group_by(Country) %>%
   dplyr::summarize(countryTotal = sum(countryCatch)) %>% # Overall catch to order plot
   arrange(-countryTotal) %>%
-  dplyr::mutate(RANK = min_rank(desc(countryTotal))) %>% 
+  dplyr::mutate(RANK = min_rank(desc(countryTotal))) %>%
   inner_join(catchCountry, c("Country" = "Country")) %>%
-  dplyr::mutate(Country = replace(Country, RANK > 9, "OTHER")) %>%
+  dplyr::mutate(Country = replace(Country, RANK > 10, "OTHER")) %>%
   group_by(YEAR, Country) %>%
   dplyr::mutate(countryCatch = sum(countryCatch)) %>%
-  distinct(YEAR, Country)
-# 
-catchPlot$Country <- factor(catchPlot$Country, levels = rev(unique(catchPlot$Country)))
-myColors <- c("grey40", brewer.pal(length(unique(catchPlot$Country)) - 1, "Spectral"))
-names(myColors) <- levels(catchPlot$Country)
+  distinct(YEAR, Country) %>%
+  filter(!is.na(YEAR))
 #
-ggplot(catchPlot, aes(x = YEAR, y = countryCatch)) +
-  geom_area(aes(fill = Country, color = Country), alpha = .8, position = "stack") +
-  scale_fill_manual(values = myColors) +
-  scale_color_manual(values = myColors) +
-  labs(x = "Year",
-       y = "Landings (tonnes)",
-       fill = "Country",
-       color = "Country") +
-  theme_bw() 
-  ggsave(filename = paste0(plotDir, id, " Overview_figure1.png"), width = 6.5,
-         height = 4.5, units = "in")
+# Colors
+catchPlot$Country <- factor(catchPlot$Country, levels = unique(catchPlot$Country))
+myColors <- c(rev(brewer.pal(length(unique(catchPlot$Country)) - 1, "Spectral")), "grey40")
+names(myColors) <- levels(catchPlot$Country)
+# Order data and limits
+catchPlotCast <- dcast(catchPlot, YEAR ~ Country, value.var = "countryCatch")
+xval <- as.numeric(catchPlotCast$YEAR)
+catchPlotCast <- catchPlotCast[,!(names(catchPlotCast) %in% "YEAR")]
+ylim <- c(0, max(rowSums(catchPlotCast, na.rm = T)))
+cols <- names(catchPlotCast)
+#
+# png(filename = paste0(plotDir, id, " Overview_figure1.png"),
+#     width = 6.5,
+#     height = 4.5,
+#     units = "in",
+#     res = 600)
+#
+par(xpd = T,
+    mar=c(2.15, 2.25, 0.45, 3.5),
+    oma = c(0, 0, 0, 1),
+    mgp = c(1.25, 0.35, 0),
+    tck = -0.01)
+#
+summary = rep(0, nrow(catchPlotCast))
+recent = summary
+#
+# Create empty plot
+plot(c(-100),
+     c(-100),
+     xlim = range(xval, na.rm = T),
+     ylim = ylim,
+     ylab = "Landings (tonnes)",
+     xlab = "Year")
+#
+for(c in 1:length(cols)) {
+  current = catchPlotCast[[cols[[c]]]]
+  summary = summary + current
+  polygon(
+    x = c(xval, rev(xval)),
+    y = c(summary, rev(recent)),
+    col = adjustcolor(myColors[[c]], alpha.f = 0.8),
+    border = myColors[[c]]
+  )
+  recent = summary
+}
+#
+legend(x = max(xval) + .25,
+       y = max(ylim, na.rm = T),
+       legend = rev(cols),
+       col = rev(myColors),
+       cex = 0.8,
+       pch = 15,
+       xpd = TRUE,
+       bty = "n")
+#
+# dev.off()
+# catchPlot$Country <- factor(catchPlot$Country, levels = rev(unique(catchPlot$Country)))
+# myColors <- c("grey40", brewer.pal(length(unique(catchPlot$Country)) - 1, "Spectral"))
+# names(myColors) <- levels(catchPlot$Country)
+# #
+# ggplot(catchPlot, aes(x = YEAR, y = countryCatch)) +
+#   geom_area(aes(fill = Country, color = Country), alpha = .8, position = "stack") +
+#   scale_fill_manual(values = myColors) +
+#   scale_color_manual(values = myColors) +
+#   labs(x = "Year",
+#        y = "Landings (tonnes)",
+#        fill = "Country",
+#        color = "Country") +
+#   theme_bw()
+#   ggsave(filename = paste0(plotDir, id, " Overview_figure1.png"), width = 6.5,
+#          height = 4.5, units = "in")
 
 ```
-Figure 1. Landings (tonnes) by nation within the `r params$set_title` ecoregion as reported to ICES.
 
-Figure 1 corrections
+Figure 1 corrections  
 * Country names and colors should be consistent between Figure 1 and 2. Need to make a look-up table between STECF and ICES country codes
-* Merge UK with Scotland (Northern Ireland, Jersey, etc.)
-* Explore 1990- 2006. SL has a plan, but will take some time
-** Not exactly straight-forward to add this info
-* Spain may be missing? Double check
+* Merge UK with Scotland (Northern Ireland, Jersey, etc.)  
+* Explore 1990- 2006. SL has a plan, but will take some time  
+** Not exactly straight-forward to add this info  
+* Spain may be missing? Double check  
 
 
 ```{r effortDatECO, include = FALSE}
@@ -72,48 +128,107 @@ effortPlot <- effortCountry %>%
   group_by(country) %>%
   dplyr::summarize(countryTotal = sum(countryEffort)) %>% # Overall catch to order plot
   arrange(-countryTotal) %>%
-  dplyr::mutate(RANK = min_rank(desc(countryTotal))) %>% 
+  dplyr::mutate(RANK = min_rank(desc(countryTotal))) %>%
   inner_join(effortCountry, c("country" = "country")) %>%
-  dplyr::mutate(country = replace(country, RANK > 9, "OTHER"))%>%
+  dplyr::mutate(country = replace(country, RANK > 10, "OTHER"))%>%
   group_by(YEAR, country) %>%
   dplyr::mutate(countryEffort = sum(countryEffort)) %>%
-  distinct(YEAR, country)
-# 
-effortPlot$country <- factor(effortPlot$country, levels = rev(unique(effortPlot$country)))
-myColors <- c("grey40", brewer.pal(length(unique(effortPlot$country)) - 1, "Spectral"))
-names(myColors) <- levels(effortPlot$country)
+  distinct(YEAR, country) %>%
+  filter(!is.na(YEAR))
 #
-ggplot(effortPlot, aes(x = YEAR, y = countryEffort)) +
-  geom_area(aes(fill = country, color = country), alpha = .8, position = "stack") +
-  scale_fill_manual(values = myColors) +
-  scale_color_manual(values = myColors) +
-  labs(x = "Year",
-       y = "Effort (kW days at sea)",
-       fill = "Country",
-       color = "Country") +
-  theme_bw() 
-  ggsave(filename = paste0(plotDir, id, " Overview_figure2.png"), width = 6.5,
-         height = 4.5)
-```
-Figure 2. Effort (kW days at sea) by nation within the `r params$set_title` ecoregion, as reported to STECF.
+# effortPlot$country <- factor(effortPlot$country, levels = rev(unique(effortPlot$country)))
+# myColors <- c("grey40", brewer.pal(length(unique(effortPlot$country)) - 1, "Spectral"))
+# names(myColors) <- levels(effortPlot$country)
 
-Figure 2 corrections
-* (see figure 1: Country names and colors should be consistent between Figure 1 and 2. Need to make a look-up table between STECF and ICES country codes)
-* [STECF Reference Metadata](https://datacollection.jrc.ec.europa.eu/c/document_library/get_file?uuid=62841ee4-dbbd-4628-a7a7-5036ce5d415b&groupId=10213) claims that 3c == ICES subarea 7a. Double check
-* Check the effort data years... might be an ordinal/nominal issue
+# Colors
+effortPlot$country <- factor(effortPlot$country, levels = unique(effortPlot$country))
+myColors <- c(rev(brewer.pal(length(unique(effortPlot$country)) - 1, "Spectral")), "grey40")
+names(myColors) <- levels(effortPlot$country)
+# Order data and limits
+effortPlotCast <- dcast(effortPlot, YEAR ~ country, value.var = "countryEffort")
+xval <- as.numeric(effortPlotCast$YEAR)
+effortPlotCast <- effortPlotCast[,!(names(effortPlotCast) %in% "YEAR")]
+ylim <- c(0, max(rowSums(effortPlotCast, na.rm = T)))
+cols <- names(effortPlotCast)
+#
+# png(filename = paste0(plotDir, id, " Overview_figure2.png"),
+#     width = 6.5,
+#     height = 4.5,
+#     units = "in",
+#     res = 600)
+#
+par(xpd = T,
+    mar=c(2.15, 2.25, 0.45, 3.5),
+    oma = c(0, 0, 0, 1),
+    mgp = c(1.25, 0.35, 0),
+    tck = -0.01)
+#
+summary = rep(0, nrow(effortPlotCast))
+recent = summary
+#
+# Create empty plot
+plot(c(-100),
+     c(-100),
+     xlim = range(xval, na.rm = T),
+     ylim = ylim,
+     ylab = "Effort (kW days at sea)",
+     xlab = "Year")
+#
+for(c in 1:length(cols)) {
+  current = effortPlotCast[[cols[[c]]]]
+  summary = summary + current
+  polygon(
+    x = c(xval, rev(xval)),
+    y = c(summary, rev(recent)),
+    col = adjustcolor(myColors[[c]], alpha.f = 0.8),
+    border = myColors[[c]]
+  )
+  recent = summary
+}
+#
+legend(x = max(xval) + .25,
+       y = max(ylim, na.rm = T),
+       legend = rev(cols),
+       col = rev(myColors),
+       cex = 0.8,
+       pch = 15,
+       xpd = TRUE,
+       bty = "n")
+#
+# dev.off()
+#
+# #
+# ggplot(effortPlot, aes(x = YEAR, y = countryEffort)) +
+#   geom_area(aes(fill = country, color = country), alpha = .8, position = "stack") +
+#   scale_fill_manual(values = myColors) +
+#   scale_color_manual(values = myColors) +
+#   labs(x = "Year",
+#        y = "Effort (kW days at sea)",
+#        fill = "Country",
+#        color = "Country") +
+#   theme_bw()
+#   ggsave(filename = paste0(plotDir, id, " Overview_figure2.png"), width = 6.5,
+#          height = 4.5)
+```
+Figure 2. Effort (kW days at sea) by nation within the `r params$set_title` ecoregion, as reported to STECF.  
+
+Figure 2 corrections  
+* (see figure 1: Country names and colors should be consistent between Figure 1 and 2. Need to make a look-up table between STECF and ICES country codes)  
+* [STECF Reference Metadata](https://datacollection.jrc.ec.europa.eu/c/document_library/get_file?uuid=62841ee4-dbbd-4628-a7a7-5036ce5d415b&groupId=10213) claims that 3c == ICES subarea 7a. Double check  
+* Check the effort data years... might be an ordinal/nominal issue  
 
 ```{r guildDatECO, include = FALSE}
 # guildDat <-
 #   catchDatECO %>%
 #   inner_join(spList, c("Species" = "X3A_CODE")) %>%
-#   full_join(fisheryGuild, c("Species" = "newCode")) 
+#   full_join(fisheryGuild, c("Species" = "newCode"))
 #
-guildCatch <- 
+guildCatch <-
   catchDatECO %>%
   # guildDat %>%
   dplyr::mutate(Fisheries.Guild = ifelse(is.na(Fisheries.Guild), "not defined", Fisheries.Guild)) %>%
   group_by(YEAR, Fisheries.Guild) %>%
-  dplyr::summarize(guildCatch = sum(VALUE, na.rm = TRUE)) %>% 
+  dplyr::summarize(guildCatch = sum(VALUE, na.rm = TRUE)) %>%
   filter(!is.na(YEAR))
 #
 ```
@@ -123,41 +238,99 @@ guildPlot <- guildCatch %>%
   group_by(Fisheries.Guild) %>%
   dplyr::summarize(guildTotal = sum(guildCatch, na.rm = TRUE)) %>% # Overall catch to order plot
   arrange(-guildTotal) %>%
-  dplyr::mutate(RANK = min_rank(desc(guildTotal))) %>% 
+  dplyr::mutate(RANK = min_rank(desc(guildTotal))) %>%
   inner_join(guildCatch, c("Fisheries.Guild" = "Fisheries.Guild")) %>%
-  dplyr::mutate(Fisheries.Guild = replace(Fisheries.Guild, RANK > 9, "OTHER")) %>%
+  dplyr::mutate(Fisheries.Guild = replace(Fisheries.Guild, RANK > 10, "OTHER")) %>%
   group_by(YEAR, Fisheries.Guild) %>%
   dplyr::mutate(guildCatch = sum(guildCatch)) %>%
   distinct(YEAR, Fisheries.Guild)
-# 
-guildPlot$Fisheries.Guild <- factor(guildPlot$Fisheries.Guild, levels = rev(unique(guildPlot$Fisheries.Guild)))
-myColors <- c("grey40", brewer.pal(length(unique(guildPlot$Fisheries.Guild)) - 1, "Spectral"))
-names(myColors) <- levels(guildPlot$Fisheries.Guild)
 #
-ggplot(guildPlot, aes(x = YEAR, y = guildCatch)) +
-  geom_area(aes(fill = Fisheries.Guild, color = Fisheries.Guild), alpha = .8, position = "stack") +
-  scale_fill_manual(values = myColors) +
-  scale_color_manual(values = myColors) +
-  labs(x = "Year",
-       y = "Landings (tonnes)",
-       fill = "Fishery guild",
-       color = "Fishery guild") +
-  theme_bw() 
-  ggsave(filename = paste0(plotDir, id, " Overview_figure3.png"), width = 6.5,
-         height = 4.5)
-```
-Figure 3. Catch (tonnes) by fishery guild within the `r params$set_title` ecoregion.
+# guildPlot$Fisheries.Guild <- factor(guildPlot$Fisheries.Guild, levels = rev(unique(guildPlot$Fisheries.Guild)))
+# myColors <- c("grey40", brewer.pal(length(unique(guildPlot$Fisheries.Guild)) - 1, "Spectral"))
+# names(myColors) <- levels(guildPlot$Fisheries.Guild)
 
-Figure 3 corrections
-* define "not defined" fishery guilds.
+# Colors
+guildPlot$Fisheries.Guild<- factor(guildPlot$Fisheries.Guild, levels = unique(guildPlot$Fisheries.Guild))
+myColors <- c(rev(brewer.pal(length(unique(guildPlot$Fisheries.Guild)) - 1, "Spectral")), "grey40")
+names(myColors) <- levels(guildPlot$Fisheries.Guild)
+# Order data and limits
+guildPlotCast <- dcast(guildPlot, YEAR ~ Fisheries.Guild, value.var = "guildCatch")
+xval <- as.numeric(guildPlotCast$YEAR)
+guildPlotCast <- guildPlotCast[,!(names(guildPlotCast) %in% "YEAR")]
+ylim <- c(0, max(rowSums(guildPlotCast, na.rm = T)))
+cols <- names(guildPlotCast)
+#
+# png(filename = paste0(plotDir, id, " Overview_figure3.png"),
+#     width = 6.5,
+#     height = 4.5,
+#     units = "in",
+#     res = 600)
+#
+par(xpd = T,
+    mar=c(2.15, 2.25, 0.45, 5.15),
+    oma = c(0, 0, 0, 1),
+    mgp = c(1.25, 0.35, 0),
+    tck = -0.01)
+#
+summary = rep(0, nrow(guildPlotCast))
+recent = summary
+#
+# Create empty plot
+plot(c(-100),
+     c(-100),
+     xlim = range(xval, na.rm = T),
+     ylim = ylim,
+     ylab = "Landings (tonnes)",
+     xlab = "Year")
+#
+for(c in 1:length(cols)) {
+  current = guildPlotCast[[cols[[c]]]]
+  summary = summary + current
+  polygon(
+    x = c(xval, rev(xval)),
+    y = c(summary, rev(recent)),
+    col = adjustcolor(myColors[[c]], alpha.f = 0.8),
+    border = myColors[[c]]
+  )
+  recent = summary
+}
+#
+legend(x = max(xval) + .25,
+       y = max(ylim, na.rm = T),
+       legend = rev(cols),
+       col = rev(myColors),
+       cex = 0.8,
+       pch = 15,
+       xpd = TRUE,
+       bty = "n")
+#
+# dev.off()
+
+#
+# ggplot(guildPlot, aes(x = YEAR, y = guildCatch)) +
+#   geom_area(aes(fill = Fisheries.Guild, color = Fisheries.Guild), alpha = .8, position = "stack") +
+#   scale_fill_manual(values = myColors) +
+#   scale_color_manual(values = myColors) +
+#   labs(x = "Year",
+#        y = "Landings (tonnes)",
+#        fill = "Fishery guild",
+#        color = "Fishery guild") +
+#   theme_bw()
+#   ggsave(filename = paste0(plotDir, id, " Overview_figure3.png"), width = 6.5,
+#          height = 4.5)
+```
+Figure 3. Catch (tonnes) by fishery guild within the `r params$set_title` ecoregion.  
+
+Figure 3 corrections  
+* define "not defined" fishery guilds.  
 
 
 ```{r speciesCatch, include = FALSE}
 # spDat <-
 #   catchDatECO %>%
-#   inner_join(spList, c("Species" = "X3A_CODE")) 
+#   inner_join(spList, c("Species" = "X3A_CODE"))
 # #
-spCatch <- 
+spCatch <-
   catchDatECO %>%
   dplyr::mutate(English_name = ifelse(is.na(English_name), "not defined", English_name)) %>%
   filter(!is.na(YEAR))
@@ -165,47 +338,105 @@ spCatch <-
 ```
 
 ```{r  figure4, echo = FALSE, include = TRUE}
-# 
+#
 spPlot <- spCatch %>%
   group_by(Species) %>%
   dplyr::summarize(spTotal = sum(VALUE, na.rm = TRUE)) %>% # Overall catch to order plot
   arrange(-spTotal) %>%
-  dplyr::mutate(RANK = min_rank(desc(spTotal))) %>% 
+  dplyr::mutate(RANK = min_rank(desc(spTotal))) %>%
   inner_join(spCatch, c("Species" = "Species")) %>%
   dplyr::mutate(Species = replace(Species, RANK > 9, "OTHER"),
-                English_name = replace(English_name, RANK > 9, "OTHER")) %>%
+                English_name = replace(English_name, RANK > 10, "OTHER")) %>%
   group_by(YEAR, Species, English_name) %>%
   dplyr::mutate(spCatch = sum(VALUE, na.rm = TRUE)) %>%
   distinct(YEAR, Species)
 
-# 
-spPlot$English_name <- factor(spPlot$English_name, levels = rev(unique(spPlot$English_name)))
-myColors <- c("grey40", brewer.pal(length(unique(spPlot$English_name)) - 1, "Spectral"))
-names(myColors) <- levels(spPlot$English_name)
 #
-ggplot(spPlot, aes(x = YEAR, y = spCatch)) +
-  geom_area(aes(fill = English_name, color = English_name), alpha = .8, position = "stack") +
-  scale_fill_manual(values = myColors) +
-  scale_color_manual(values = myColors) +
-  labs(x = "Year",
-       y = "Landings (tonnes)",
-       fill = "Common name",
-       color = "Common name") +
-  theme_bw() 
-  ggsave(filename = paste0(plotDir, id, " Overview_figure4.png"), width = 6.5,
-         height = 4.5)
-```
-Figure 4. Landings (tonnes) reported to ICES for the 10 species with the greatest gross tonneage within the `r params$set_title`.
+# spPlot$English_name <- factor(spPlot$English_name, levels = rev(unique(spPlot$English_name)))
+# myColors <- c("grey40", brewer.pal(length(unique(spPlot$English_name)) - 1, "Spectral"))
+# names(myColors) <- levels(spPlot$English_name)
 
-Figure 4 corrections
-* Remove "nei" and "(=Poutassou)" type additions to the FAO species name list
+# Colors
+spPlot$English_name <- factor(spPlot$English_name, levels = unique(spPlot$English_name))
+myColors <- c(rev(brewer.pal(length(unique(spPlot$English_name)) - 1, "Spectral")), "grey40")
+names(myColors) <- levels(spPlot$English_name)
+# Order data and limits
+spPlotCast <- dcast(spPlot, YEAR ~ English_name, value.var = "spCatch")
+xval <- as.numeric(spPlotCast$YEAR)
+spPlotCast <- spPlotCast[,!(names(spPlotCast) %in% "YEAR")]
+ylim <- c(0, max(rowSums(spPlotCast, na.rm = T)))
+cols <- names(spPlotCast)
+#
+# png(filename = paste0(plotDir, id, " Overview_figure4.png"),
+#     width = 6.5,
+#     height = 4.5,
+#     units = "in",
+#     res = 600)
+# #
+par(xpd = T,
+    mar=c(2.15, 2.25, 0.45, 8),
+    oma = c(0, 0, 0, 1),
+    mgp = c(1.25, 0.35, 0),
+    tck = -0.01)
+#
+summary = rep(0, nrow(spPlotCast))
+recent = summary
+#
+# Create empty plot
+plot(c(-100),
+     c(-100),
+     xlim = range(xval, na.rm = T),
+     ylim = ylim,
+     ylab = "Landings (tonnes)",
+     xlab = "Year")
+#
+for(c in 1:length(cols)) {
+  current = spPlotCast[[cols[[c]]]]
+  summary = summary + current
+  polygon(
+    x = c(xval, rev(xval)),
+    y = c(summary, rev(recent)),
+    col = adjustcolor(myColors[[c]], alpha.f = 0.8),
+    border = myColors[[c]]
+  )
+  recent = summary
+}
+#
+legend(x = max(xval) + .25,
+       y = max(ylim, na.rm = T),
+       legend = rev(cols),
+       col = rev(myColors),
+       cex = 0.8,
+       pch = 15,
+       xpd = TRUE,
+       bty = "n")
+#
+# dev.off()
+
+#
+# ggplot(spPlot, aes(x = YEAR, y = spCatch)) +
+#   geom_area(aes(fill = English_name, color = English_name), alpha = .8, position = "stack") +
+#   scale_fill_manual(values = myColors) +
+#   scale_color_manual(values = myColors) +
+#   labs(x = "Year",
+#        y = "Landings (tonnes)",
+#        fill = "Common name",
+#        color = "Common name") +
+#   theme_bw()
+#   ggsave(filename = paste0(plotDir, id, " Overview_figure4.png"), width = 6.5,
+#          height = 4.5)
+```
+Figure 4. Landings (tonnes) reported to ICES for the 10 species with the greatest gross tonneage within the `r params$set_title`.  
+
+Figure 4 corrections  
+* Remove "nei" and "(=Poutassou)" type additions to the FAO species name list  
 
 
 ```{r gearCatch, include = FALSE}
 # stecfCatchDat <-
 #   stecfCatchDat %>%
 #   filter(reg_area %in% ecoAreaEffort) %>%
-#   melt(id.vars = c("annex", "reg_area", "country", "reg_gear", "specon", "species"), 
+#   melt(id.vars = c("annex", "reg_area", "country", "reg_gear", "specon", "species"),
 #        variable.name = "YEAR",
 #        value.name = "VALUE") %>%
 #   mutate(METRIC = as.character(gsub(".*\\s", "", YEAR)),
@@ -214,7 +445,8 @@ Figure 4 corrections
 #
 catchGear <- stecfCatchDatECO %>%
   group_by(YEAR, reg_gear) %>%
-  dplyr::summarize(gearCatch = sum(VALUE, na.rm = T)) # %>% # Total annual catch
+  dplyr::summarize(gearCatch = sum(VALUE, na.rm = T)) %>% # Total annual catch
+  filter(!is.na(YEAR))
 # Convert country codes to proper names
 ```
 
@@ -223,38 +455,94 @@ gearPlot <- catchGear %>%
   group_by(reg_gear) %>%
   dplyr::summarize(gearTotal = sum(gearCatch, na.rm = TRUE)) %>% # Overall catch to order plot
   arrange(-gearTotal) %>%
-  dplyr::mutate(RANK = min_rank(desc(gearTotal))) %>% 
+  dplyr::mutate(RANK = min_rank(desc(gearTotal))) %>%
   inner_join(catchGear, c("reg_gear" = "reg_gear")) %>%
   dplyr::mutate(reg_gear = replace(reg_gear, RANK > 9, "OTHER")) %>%
   group_by(YEAR, reg_gear) %>%
   dplyr::mutate(guildCatch = sum(gearCatch)) %>%
   distinct(YEAR, reg_gear)
-# 
-gearPlot$reg_gear <- factor(gearPlot$reg_gear, levels = rev(unique(gearPlot$reg_gear)))
-myColors <- c("grey40", brewer.pal(length(unique(gearPlot$reg_gear)) - 1, "Spectral"))
-names(myColors) <- levels(gearPlot$reg_gear)
 #
-ggplot(gearPlot, aes(x = YEAR, y = gearCatch)) +
-  geom_area(aes(fill = reg_gear, color = reg_gear), alpha = .8, position = "stack") +
-  scale_fill_manual(values = myColors) +
-  scale_color_manual(values = myColors) +
-  labs(x = "Year",
-       y = "Landings (tonnes)",
-       fill = "Gear type",
-       color = "Gear type") +
-  theme_bw()
-  ggsave(filename = paste0(plotDir, id, " Overview_figure5.png"), width = 6.5,
-         height = 4.5)
+# gearPlot$reg_gear <- factor(gearPlot$reg_gear, levels = rev(unique(gearPlot$reg_gear)))
+# myColors <- c("grey40", brewer.pal(length(unique(gearPlot$reg_gear)) - 1, "Spectral"))
+# names(myColors) <- levels(gearPlot$reg_gear)
+# Colors
+gearPlot$reg_gear <- factor(gearPlot$reg_gear, levels = unique(gearPlot$reg_gear))
+myColors <- c(rev(brewer.pal(length(unique(gearPlot$reg_gear)) - 1, "Spectral")), "grey40")
+names(myColors) <- levels(gearPlot$reg_gear)
+# Order data and limits
+gearPlotCast <- dcast(gearPlot, YEAR ~ reg_gear, value.var = "gearCatch")
+xval <- as.numeric(gearPlotCast$YEAR)
+gearPlotCast <- gearPlotCast[,!(names(gearPlotCast) %in% "YEAR")]
+ylim <- c(0, max(rowSums(gearPlotCast, na.rm = T)))
+cols <- names(gearPlotCast)
+#
+# png(filename = paste0(plotDir, id, " Overview_figure5.png"),
+#     width = 6.5,
+#     height = 4.5,
+#     units = "in",
+#     res = 600)
+# #
+par(xpd = T,
+    mar=c(2.15, 2.25, 0.45, 7.0),
+    oma = c(0, 0, 0, 1),
+    mgp = c(1.25, 0.35, 0),
+    tck = -0.01)
+#
+summary = rep(0, nrow(gearPlotCast))
+recent = summary
+#
+# Create empty plot
+plot(c(-100),
+     c(-100),
+     xlim = range(xval, na.rm = T),
+     ylim = ylim,
+     ylab = "Landings (tonnes)",
+     xlab = "Year")
+#
+for(c in 1:length(cols)) {
+  current = gearPlotCast[[cols[[c]]]]
+  summary = summary + current
+  polygon(
+    x = c(xval, rev(xval)),
+    y = c(summary, rev(recent)),
+    col = adjustcolor(myColors[[c]], alpha.f = 0.8),
+    border = myColors[[c]]
+  )
+  recent = summary
+}
+#
+legend(x = max(xval) + .25,
+       y = max(ylim, na.rm = T),
+       legend = rev(cols),
+       col = rev(myColors),
+       cex = 0.8,
+       pch = 15,
+       xpd = TRUE,
+       bty = "n")
+#
+# dev.off()
+#
+# ggplot(gearPlot, aes(x = YEAR, y = gearCatch)) +
+#   geom_area(aes(fill = reg_gear, color = reg_gear), alpha = .8, position = "stack") +
+#   scale_fill_manual(values = myColors) +
+#   scale_color_manual(values = myColors) +
+#   labs(x = "Year",
+#        y = "Landings (tonnes)",
+#        fill = "Gear type",
+#        color = "Gear type") +
+#   theme_bw()
+#   ggsave(filename = paste0(plotDir, id, " Overview_figure5.png"), width = 6.5,
+#          height = 4.5)
 
 ```
-Figure 5.  EU landings (tonnes) by gear reported to STECF within the `r params$set_title` ecoregion.
+Figure 5.  EU landings (tonnes) by gear reported to STECF within the `r params$set_title` ecoregion.  
 
-Figure 5 corrections
-* Merge the different gears together
-* Metier overviews
+Figure 5 corrections  
+* Merge the different gears together  
+* Metier overviews  
 
 
-Table 1. Number of stocks above and below reference points total and divided into fishery guilds
+Table 1. Number of stocks above and below reference points total and divided into fishery guilds  
 
 
 ```{r guildMSY, include = FALSE}
@@ -276,9 +564,7 @@ Table 1. Number of stocks above and below reference points total and divided int
 #          FmsyDescription = "FMSY",
 #          stockSizeDescription = gsub("Stock Size: ", "", stockSizeDescription))
 # #
-guildMSY <- guildList %>%
-  filter(stockSizeDescription != "B/BMSY" |
-           fishingPressureDescription != "F/FMSY") %>%
+guildMSY <- guildListECO %>%
   group_by(STOCKID) %>%
   mutate(F_FMSY = F / FMSY,
          SSB_MSYBtrigger = SSB / MSYBtrigger) %>%
@@ -288,35 +574,203 @@ guildMSY <- guildList %>%
        value.name = "stockValue") %>%
   filter(!is.na(stockValue)) %>% # remove NA VALUE
   group_by(ECOREGION, GUILD, METRIC, YEAR) %>%
-  mutate(ecoGuildMean = mean(stockValue)) %>%
+  mutate(ecoGuildMean = mean(stockValue, na.rm = TRUE)) %>%
   group_by(ECOREGION, METRIC, YEAR) %>%
-  mutate(ecoValue = mean(stockValue)) %>%
+  mutate(ecoValue = mean(stockValue, na.rm = TRUE)) %>%
   group_by(METRIC, GUILD, YEAR) %>%
-  mutate(allMean = mean(stockValue))
-# 
-guildRatio <- guildMSY %>%
-  filter(METRIC %in% c("F_FMSY", "SSB_MSYBtrigger"))
-  levels(guildRatio$METRIC) <- c("F/F[MSY]","SSB/MSYB[trigger]", "F", "F[MSY]")
+  mutate(allMean = mean(stockValue, na.rm = TRUE))
+
+#
+# guildRatio <- guildMSY %>%
+# guildRatio <- guildListECO %>%
+#   filter(METRIC %in% c("F_FMSY", "SSB_MSYBtrigger"))
+# levels(guildRatio$METRIC) <- c("F/F[MSY]","SSB/MSYB[trigger]", "F", "F[MSY]")
+
+allDat <- guildMSY %>%
+  filter(METRIC %in% c("F_FMSY", "SSB_MSYBtrigger")) %>%
+  select(pageGroup = GUILD,
+         lineGroup = STOCKID,
+         YEAR,
+         plotGroup = METRIC,
+         plotValue = stockValue)
+#
+oMean <- guildMSY %>%
+  filter(METRIC %in% c("F_FMSY", "SSB_MSYBtrigger")) %>%
+  distinct(ECOREGION, GUILD, METRIC, YEAR) %>%
+  select(pageGroup = GUILD,
+         YEAR,
+         plotGroup = METRIC,
+         plotValue = ecoGuildMean) %>%
+  mutate(lineGroup = "MEAN")
+
+allDat <- bind_rows(allDat, oMean)
+
+plotList <- allDat %>%
+  group_by(pageGroup) %>%
+  select(pageGroup, lineGroup) %>%
+  mutate(nLines = n_distinct(lineGroup) - 1,
+         COLOR = NA) %>%
+  distinct(lineGroup) %>%
+  arrange(pageGroup)
+#
+singleList <- plotList %>%
+  filter(nLines == 1) %>%
+  mutate(COLOR = colList[1:length(nLines)])
+#
+normList <- plotList %>%
+  filter(nLines <= 9 &
+         nLines > 1 &
+         lineGroup != "MEAN") %>%
+  mutate(COLOR = colList[1:length(nLines)])
+#
+longList <- plotList %>%
+   filter(nLines > 9 &
+          lineGroup != "MEAN") %>%
+  mutate(COLOR = "grey80")
+#
+meanList <- plotList %>%
+  filter(nLines > 1 &
+         lineGroup == "MEAN") %>%
+  mutate(COLOR = "grey40")
+#
+colorList <- bind_rows(singleList, normList, longList, meanList)
+allDat <- full_join(colorList, allDat, by = c("pageGroup", "lineGroup"))
+#
+# allDat <- full_join(plotList, allDat, by = c("pageGroup", "lineGroup"))
+#
+allDat <-
+  allDat %>%
+  group_by(pageGroup) %>%
+  mutate(nLines = n_distinct(lineGroup)) %>%
+  filter(nLines > 2 | lineGroup != "MEAN")
 ```
 
-```{r figure6, echo = FALSE, include = FALSE}
-guildRatio %>%
-  ungroup() %>%
-  distinct(STOCKID, METRIC, YEAR) %>%
-  ggplot(aes(x = YEAR, y = stockValue, col = STOCKID)) +
-  geom_line(aes(x = YEAR, y = ecoGuildMean), col = "grey80", size = 1.25) +
-  geom_line() +
-  geom_hline(yintercept = 1, col = "grey40", linetype = "dashed") +
-  scale_colour_brewer(palette = "Spectral") +
-  facet_grid(METRIC~GUILD, labeller = label_parsed) +
-  theme_bw() +
-  theme(legend.position = "bottom",
-        strip.text = element_text(size = 12, angle = 0, hjust = 0),
-        strip.background = element_blank(),
-        legend.key = element_rect(colour = NA)) +
-  labs(x = "Year", y = "")
-  ggsave(filename = paste0(plotDir, id, " Overview_figure6.png"), width = 6.5,
-         height = 4.5)
+```{r figure6, echo = FALSE, include = TRUE}
+for(pgGroup in unique(allDat$pageGroup)) { # Data grouped by PaGe (e.g., by ecoregion)
+  all.pg <- allDat[allDat$pageGroup == pgGroup,]
+  all.pg$plotGroup <- factor(all.pg$plotGroup)
+  #
+  # plotFileName = paste0(plotDir, id, " Overview_figure6-", pgGroup, ".png")
+  # PLOT AVG
+  # png(filename = plotFileName,
+  #     width = 172.4,
+  #     height = 162.6,
+  #     units = "mm",
+  #     res = 600)
+  #
+  par(mfrow = c(2,1),
+      mar=c(2.15, 2.25, 0.45, 0.25),
+      oma = c(0, 0, 1.25, 0),
+      usr = c(0,1,0,1),
+      mgp=c(3, .35, 0),
+      tck=-0.01)
+  # Order the lineGroup to make sure mean is plotted
+  # if(overallMean == TRUE) {
+    if(any(all.pg$lineGroup == "MEAN")) {
+      lineGroupOrd <- relevel(factor(unique(all.pg$lineGroup),
+                                     ordered = F),
+                              ref = "MEAN")
+      if(length(lineGroupOrd) > 10) {
+        lineGroupOrd <- factor(lineGroupOrd, levels = rev(levels(lineGroupOrd)))
+      } # close >= 10
+    } #  reorder lineGroupOrd if overallMean == T
+    else {
+      lineGroupOrd <- factor(unique(all.pg$lineGroup),
+                             ordered = T)
+    } # reorder lineGroupOrd if overallMean == F
+  # } # TRUE overallMean
+  # if(overallMean == FALSE ) {
+  #   lineGroupOrd <- factor(unique(all.pg$lineGroup),
+  #                          ordered = T)
+  # } # FALSE overallMean
+  #
+  for(plGroup in unique(levels(all.pg$plotGroup))) { # Data grouped by PLot (e.g., F or SSB)
+    #
+    all.pl <- all.pg[all.pg$plotGroup == plGroup,]
+    #
+    yRange <- c(0, max(all.pl$plotValue, na.rm =T) + max(all.pl$plotValue, na.rm = T) * .15)
+    # xRange is the same for both BMSY and FMSY
+    xRange <- c(min(all.pg$YEAR[!is.na(all.pg$plotValue)]),
+                max(all.pg$YEAR[!is.na(all.pg$plotValue)]))
+    #
+    plot(NA,
+         type = "l",
+         ylim = yRange,
+         xlim = xRange,
+         yaxt = "n",
+         xaxt = "n",
+         ann = FALSE)
+    abline(h = 1.0, lty = 2, col = "black", lwd = 1)
+    #
+    # Add lines according to the lnGroup
+    for(lnGroup in levels(lineGroupOrd)) {
+      if(all(is.na(all.pl$plotValue[all.pl$lineGroup == lnGroup]))) {
+        lnGroup <- NA
+        next
+      } # close next if all NA
+      if(!all(is.na(all.pl$plotValue[all.pl$lineGroup == lnGroup]))) {
+        d <- data.frame(all.pl$plotValue[all.pl$lineGroup == lnGroup],
+                        all.pl$YEAR[all.pl$lineGroup == lnGroup])
+        d <- d[order(d[,2]),]
+        col.d <- as.character(unique(all.pl$COLOR[all.pl$lineGroup == lnGroup]))
+        lin.d <- ifelse(lnGroup == "MEAN", 4, 2)
+        lines(d[,2], d[,1], col = col.d, lwd = lin.d)
+      } # close line plotting
+    } # close lnGroup
+    #
+    # Label axes
+    axis(1, at = pretty(xRange), cex.axis = .85)
+    mtext("Year", side = 1, line = 1.25, cex= 1)
+    axis(2, at = pretty(yRange), cex.axis = .75, las = 1)
+    if(plGroup == "F_FMSY") {
+      mtext(expression("F/F"["MSY"]), side = 2, line = 1, cex= 1)
+    } # close F
+    if(plGroup == "SSB_MSYBtrigger") {
+      mtext(expression("SSB/MSY B"["trigger"]), side = 2, line = 1, cex= 1)
+    } # close SSB
+    mtext(pgGroup, side = 3, outer = T, cex= 1.5, font = 2)
+    #
+    # Legend
+    if(length(lineGroupOrd) <= 10) {
+      legend("topright",
+             legend = as.character(unique(all.pl$lineGroup)),
+             fill = as.character(unique(all.pl$COLOR)),
+             bty="n",
+             ncol = 3,
+             cex = .85)
+    } # Close less than 9 lines legend
+    if(length(lineGroupOrd) > 10) {
+      legend("topright",
+             legend = "MEAN",
+             fill = "grey40",
+             bty="n",
+             ncol = 1,
+             cex = .85)
+    } # close more than 10 lines legend
+  } # Close plGroup
+  # dev.off()
+}# Close pgGroup
+```
+
+
+```{r figure6ggplot2, echo = FALSE, include = FALSE}
+# guildRatio %>%
+#   ungroup() %>%
+#   distinct(STOCKID, METRIC, YEAR) %>%
+#   ggplot(aes(x = YEAR, y = stockValue, col = STOCKID)) +
+#   geom_line(aes(x = YEAR, y = ecoGuildMean), col = "grey30", size = 1.25) +
+#   geom_line() +
+#   geom_hline(yintercept = 1, col = "grey40", linetype = "dashed") +
+#   scale_colour_brewer(palette = "Spectral") +
+#   facet_grid(METRIC~GUILD, labeller = label_parsed) +
+#   theme_bw() +
+#   theme(legend.position = "bottom",
+#         strip.text = element_text(size = 12, angle = 0, hjust = 0),
+#         strip.background = element_blank(),
+#         legend.key = element_rect(colour = NA)) +
+#   labs(x = "Year", y = "")
+#   ggsave(filename = paste0(plotDir, id, " Overview_figure6.png"), width = 6.5,
+#          height = 4.5)
 ```
 Figure 6. Stock trends of F/FMSY and SSB/ MSYBtrigger within the `r params$set_title` ecoregion over time. Full stock names by stock codes are available in Annex Table A.
 
@@ -325,39 +779,39 @@ Figure 6 corrections
 
 
 ```{r histGuildMSY, include = FALSE}
-FlowFMSY <- 
-  guildList %>%
+FlowFMSY <-
+  guildListECO %>%
   group_by(GUILD, YEAR) %>%
   filter(F < FMSY) %>%
   summarize(METRIC = "FlowFMSY",
             VALUE = sum(landings, na.rm = TRUE))
-# 
+#
 FupFMSY <- guildList %>%
   group_by(GUILD, YEAR) %>%
   filter(F > FMSY) %>%
   summarize(METRIC = "FupFMSY",
             VALUE = sum(landings, na.rm = TRUE))
-# 
+#
 noFMSY <- guildList %>%
   group_by(GUILD, YEAR) %>%
   filter(is.na(FMSY)) %>%
   summarize(METRIC = "noFMSY",
             VALUE = sum(landings, na.rm = TRUE))
-# 
+#
 dat <- bind_rows(noFMSY, FupFMSY, FlowFMSY)
-cols <- c("FlowFMSY" = "#1B9E77", "FupFMSY" = "#D95F02", "noFMSY" ="#666666") 
+cols <- c("FlowFMSY" = "#1B9E77", "FupFMSY" = "#D95F02", "noFMSY" ="#666666")
 ```
 
 
 ```{r figure7, echo = FALSE, include = TRUE}
 ggplot(dat, aes(x = YEAR, y = VALUE)) +
   geom_bar(stat = "identity", aes(fill =factor(METRIC))) +
-  theme_bw() + 
+  theme_bw() +
   scale_fill_manual(values = cols, name = "",
                       labels = c(expression(F < F[MSY]),
                                  expression(F > F[MSY]),
                                  expression(paste(F[MSY], " unk.")))) +
-  facet_grid(GUILD ~ ., scales = "free_y") + 
+  facet_grid(GUILD ~ ., scales = "free_y") +
   theme(legend.position = "bottom",
         strip.background = element_blank(),
         strip.text = element_text(size = 7, angle = 0, hjust = 0),
@@ -365,23 +819,24 @@ ggplot(dat, aes(x = YEAR, y = VALUE)) +
     labs(x = "Year",
        y = "Landings (tonnes)",
        fill = "Fishery guild")
-  ggsave(filename = paste0(plotDir, id, " Overview_figure7.png"), width = 6.5,
-         height = 4.5)
+  # ggsave(filename = paste0(plotDir, id, " Overview_figure7.png"), width = 6.5,
+  #        height = 4.5)
 ```
-Figure 7. Total landings removed in relation to FMSY status for stocks within the XX ecoregion over time.
+Figure 7. Total landings removed in relation to FMSY status for stocks within the XX ecoregion over time.  
 
-Figure 7 corrections
+Figure 7 corrections  
+
 ```{r kobe, include = FALSE}
 ddt <- guildListECO[guildListECO$YEAR == 2014,
                  # guildList$ECOREGION == "Baltic Sea",
                  colnames(guildListECO) %in% c("STOCKID", "GUILD", "F", "FMSY", "SSB", "MSYBtrigger", "landings", "catches")]
 ddt$FMSY[ddt$FMSY == 0] <- NA
 ddt$MSYBtrigger[ddt$MSYBtrigger == 0] <- NA
-# 
+#
 ddt$F.FMSY[!is.na(ddt$FMSY)] <- ddt$F[!is.na(ddt$FMSY)] / ddt$FMSY[!is.na(ddt$FMSY)]
 ddt$SSB.Btrig[!is.na(ddt$MSYBtrigger)] <- ddt$SSB[!is.na(ddt$MSYBtrigger)] / ddt$MSYBtrigger[!is.na(ddt$MSYBtrigger)]
 ddt$landings <- ifelse(is.na(ddt$landings) & !is.na(ddt$catches), ddt$catches, ddt$landings)
-# 
+#
 #determine size of bubbles
 ddt$cex <- 10 * sqrt(as.numeric(ddt$landings)/ max(as.numeric(ddt$landings), na.rm=T))
 ddt$cex[is.na(ddt$landings)] <- min(ddt$cex, na.rm = T)
@@ -405,23 +860,23 @@ ddt$textPoints <- (ddt$F.FMSY) + sqrt(ddt$cex)*0.1
 ```{r figure8a, echo = FALSE, include = TRUE}
 numRows <- length(unique(ddt$GUILD))
 
-png(filename = paste0(plotDir, id, " Overview_figure8.png"),
-      width = 172.4 * 2,
-      height = 172.4 * 3,
-      units = "mm",
-      res = 600)
+# png(filename = paste0(plotDir, id, " Overview_figure8.png"),
+#       width = 172.4 * 2,
+#       height = 172.4 * 3,
+#       units = "mm",
+#       res = 600)
 
 par(mfrow = c(1 + numRows, 2),
     mar = c(2.15, 2.75, 0.45, 2.75),
     oma = c(0, 0, 0, 0),
     mgp = c(1.25, 0.35, 0),
     tck = -0.01)
-# 
-par(mfg = c(1, 1)) 
-plot(NA, 
+#
+par(mfg = c(1, 1))
+plot(NA,
      xlim = c(0,5),
      ylim = c(0,5),
-     xlab = expression("F / F"[MSY]), 
+     xlab = expression("F / F"[MSY]),
      ylab = expression("SSB / MSY B"[trigger]),
      xaxs = "i",
      yaxs = "i")
@@ -431,28 +886,27 @@ abline(v = 1, col = "grey60", lty = 2)
 #plot bubbles
 points(ddt$F.FMSY, ddt$SSB.Btrig, cex = ddt$cex, pch=21, bg=ddt$colList, col=ddt$colList)
 text(ddt$F.FMSY, ddt$SSB.Btrig, ddt$STOCKID, col = "grey30")
-# 
+#
 ddt$colList[is.na(ddt$colList)] <- "grey50"
 df <- ddt[order(ddt$landings),]
-# 
+#
 # set up main plot
 par(mar = c(2.5, 4.25, 0.45, 2.75),
     oma = c(0, 0, 0, 0),
     mgp = c(1.25, 0.35, 0),
-    tck = -0.01,# ,
-    # family = "Calibri",
+    tck = -0.01,
     new = T)
 
 par(mfg = c(1,2))
-barplot(df$landings, 
+barplot(df$landings,
         xlim = c(0, c(max(df$landings) + max(df$landings) * .05)),
-        axes = T, 
+        axes = T,
         col = df$colList,
-        space = .5, 
+        space = .5,
         border = "grey80",
-        horiz = TRUE, 
+        horiz = TRUE,
         xlab = "Landings (tonnes)",
-        names.arg = df$STOCKID, 
+        names.arg = df$STOCKID,
         las = 1)
 mtexti(text = "all stocks", side = 4, off = .1)
 box()
@@ -471,12 +925,12 @@ par(mar= c(2.15, 2.75, 0.45, 2.75),
     mgp = c(1.25, 0.35, 0),
     tck = -0.01,
     new = TRUE)
-# 
+#
 par(mfg = c(1 + i, 1))
-plot(NA, 
+plot(NA,
      xlim = c(0,5),
      ylim = c(0,5),
-     xlab = expression("F / F"[MSY]), 
+     xlab = expression("F / F"[MSY]),
      ylab = expression("SSB / MSY B"[trigger]),
      xaxs = "i",
      yaxs = "i")
@@ -497,72 +951,130 @@ par(mar= c(2.5, 4.25, 0.45, 2.75),
     mgp = c(1.25, 0.35, 0),
     tck = -0.01,
     new = TRUE)
-# 
+#
 par(mfg = c(1 + i, 2))
-barplot(df$landings, 
+barplot(df$landings,
         xlim = c(0, c(max(df$landings) + max(df$landings) * .05)),
-        axes = T, 
+        axes = T,
         col = df$colList,
-        space = .5, 
+        space = .5,
         border = "grey80",
-        horiz = TRUE, 
+        horiz = TRUE,
         xlab = "Landings (tonnes)",
-        names.arg = df$STOCKID, 
+        names.arg = df$STOCKID,
         las = 1)
 mtexti(text = GUILD.i, side = 4, off = .1)
 box()
 }
-dev.off()
-# 
+# dev.off()
+#
 ```
-Figure 8. Kobe plots and landings of XX stocks by trophic guild (all stocks, pelagic, flatfish, demersal). The left Kobe plots show relative fishing pressure (F/FMSY) and biomass (SSB/ MSY Btrigger) for stocks that have SSB and F relative to reference points (MSY where available, otherwise PA or Qualitative). The size of each bubble corresponds to the ICES official landings in 2014. Stocks in green are exploited below FMSY and have an SSB that is above MSY Btrigger. Stocks in red are exploited above FMSY and have an SSB that is below MSY Btrigger, exploited above FMSY and have an SSB that is above MSY Btrigger, or  and vice versa. Stocks in gray are of unknown status in relation to reference points. Full stock names by stock codes are available in Annex Table A.
+Figure 8. Kobe plots and landings of `r params$set_title` stocks by trophic guild (all stocks, pelagic, flatfish, demersal). The left Kobe plots show relative fishing pressure (F/FMSY) and biomass (SSB/ MSY Btrigger) for stocks that have SSB and F relative to reference points (MSY where available, otherwise PA or Qualitative). The size of each bubble corresponds to the ICES official landings in 2014. Stocks in green are exploited below FMSY and have an SSB that is above MSY Btrigger. Stocks in red are exploited above FMSY and have an SSB that is below MSY Btrigger, exploited above FMSY and have an SSB that is above MSY Btrigger, or  and vice versa. Stocks in gray are of unknown status in relation to reference points. Full stock names by stock codes are available in Annex Table A.  
 
 ```{r gearEffort, include = FALSE}
 
 effortGear <- effortDatECO %>%
   group_by(YEAR, reg_gear_cod) %>%
-  dplyr::summarize(gearEffort = sum(VALUE, na.rm = T)) # %>% # Total annual catch
+  dplyr::summarize(gearEffort = sum(VALUE, na.rm = T)) %>% # Total annual catch
+  filter(!is.na(YEAR))
 ```
 
 
-```{r figure 9, echo = TRUE, include = FALSE}
+```{r figure9, echo = TRUE, include = FALSE}
 gearEfPlot <- effortGear %>%
   group_by(reg_gear_cod) %>%
   dplyr::summarize(gearTotal = sum(gearEffort, na.rm = TRUE)) %>% # Overall catch to order plot
   arrange(-gearTotal) %>%
-  dplyr::mutate(RANK = min_rank(desc(gearTotal))) %>% 
+  dplyr::mutate(RANK = min_rank(desc(gearTotal))) %>%
   inner_join(effortGear, c("reg_gear_cod" = "reg_gear_cod")) %>%
-  dplyr::mutate(reg_gear_cod = replace(reg_gear_cod, RANK > 9, "OTHER")) %>%
+  dplyr::mutate(reg_gear_cod = replace(reg_gear_cod, RANK > 10, "OTHER")) %>%
   group_by(YEAR, reg_gear_cod) %>%
   dplyr::mutate(gearEffort = sum(gearEffort)) %>%
   distinct(YEAR, reg_gear_cod)
-# 
-gearEfPlot$reg_gear_cod <- factor(gearEfPlot$reg_gear_cod, levels = rev(unique(gearEfPlot$reg_gear_cod)))
-myColors <- c("grey40", brewer.pal(length(unique(gearEfPlot$reg_gear_cod)) - 1, "Spectral"))
-names(myColors) <- levels(gearEfPlot$reg_gear_cod)
 #
-ggplot(gearEfPlot, aes(x = YEAR, y = gearEffort)) +
-  geom_area(aes(fill = reg_gear_cod, color = reg_gear_cod), alpha = .8, position = "stack") +
-  scale_fill_manual(values = myColors) +
-  scale_color_manual(values = myColors) +
-  labs(x = "Year",
-       y = "Effort (Kw Fishing days)",
-       fill = "Gear",
-       color = "Gear") +
-  theme(legend.key = element_rect(colour = NA)) +
-  theme_bw() 
-  ggsave(filename = paste0(plotDir, id, " Overview_figure9.png"), width = 6.5,
-         height = 4.5)
+# gearEfPlot$reg_gear_cod <- factor(gearEfPlot$reg_gear_cod, levels = rev(unique(gearEfPlot$reg_gear_cod)))
+# myColors <- c("grey40", brewer.pal(length(unique(gearEfPlot$reg_gear_cod)) - 1, "Spectral"))
+# names(myColors) <- levels(gearEfPlot$reg_gear_cod)
+#
+# Colors
+gearEfPlot$reg_gear_cod <- factor(gearEfPlot$reg_gear_cod, levels = unique(gearEfPlot$reg_gear_cod))
+myColors <- c(rev(brewer.pal(length(unique(gearEfPlot$reg_gear_cod)) - 1, "Spectral")), "grey40")
+names(myColors) <- levels(gearEfPlot$reg_gear_cod)
+# Order data and limits
+gearEfPlotCast <- dcast(gearEfPlot, YEAR ~ reg_gear_cod, value.var = "gearEffort")
+xval <- as.numeric(gearEfPlotCast$YEAR)
+gearEfPlotCast <- gearEfPlotCast[,!(names(gearEfPlotCast) %in% "YEAR")]
+ylim <- c(0, max(rowSums(gearEfPlotCast, na.rm = T)))
+cols <- names(gearEfPlotCast)
+#
+# png(filename = paste0(plotDir, id, " Overview_figure9.png"),
+#     width = 6.5,
+#     height = 4.5,
+#     units = "in",
+#     res = 600)
+#
+par(xpd = T,
+    mar=c(2.15, 2.25, 0.45, 7.0),
+    oma = c(0, 0, 0, 1),
+    mgp = c(1.25, 0.35, 0),
+    tck = -0.01)
+#
+summary = rep(0, nrow(gearEfPlotCast))
+recent = summary
+#
+# Create empty plot
+plot(c(-100),
+     c(-100),
+     xlim = range(xval, na.rm = T),
+     ylim = ylim,
+     ylab = "Effort (kW days at sea)",
+     xlab = "Year")
+#
+for(c in 1:length(cols)) {
+  current = gearEfPlotCast[[cols[[c]]]]
+  summary = summary + current
+  polygon(
+    x = c(xval, rev(xval)),
+    y = c(summary, rev(recent)),
+    col = adjustcolor(myColors[[c]], alpha.f = 0.8),
+    border = myColors[[c]]
+  )
+  recent = summary
+}
+#
+legend(x = max(xval) + .25,
+       y = max(ylim, na.rm = T),
+       legend = rev(cols),
+       col = rev(myColors),
+       cex = 0.8,
+       pch = 15,
+       xpd = TRUE,
+       bty = "n")
+#
+# dev.off()
+
+# ggplot(gearEfPlot, aes(x = YEAR, y = gearEffort)) +
+#   geom_area(aes(fill = reg_gear_cod, color = reg_gear_cod), alpha = .8, position = "stack") +
+#   scale_fill_manual(values = myColors) +
+#   scale_color_manual(values = myColors) +
+#   labs(x = "Year",
+#        y = "Effort (Kw Fishing days)",
+#        fill = "Gear",
+#        color = "Gear") +
+#   theme(legend.key = element_rect(colour = NA)) +
+#   theme_bw()
+#   ggsave(filename = paste0(plotDir, id, " Overview_figure9.png"), width = 6.5,
+#          height = 4.5)
 ```
 
-## Figure 9. Distribution of effort deployed by EU nations by gear type within the Celtic Seas ecoregion over time.
-* No pair trawl
-* Demersal trawl
+## Figure 9. Distribution of effort deployed by EU nations by gear type within the Celtic Seas ecoregion over time.    
+* No pair trawl  
+* Demersal trawl  
 
 
 
-## Table 1 will be an annex
-* Add Fpa and Bpa as additional columns.
+## Table 1 will be an annex   
+* Add Fpa and Bpa as additional columns.  
 
 
-For questions, please email <A HREF="mailto:scott.large@ices.dk?subject=Fishery Advice plots">scott.large@ices.dk</A>.
+For questions, please email <A HREF="mailto:scott.large@ices.dk?subject=Fishery Advice plots">scott.large@ices.dk</A>.  

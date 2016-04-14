@@ -7,12 +7,12 @@ library(RColorBrewer)
 library(knitr)
 library(reshape2)
 library(ggplot2)
-# library(ggthemes)
 library(XML)
 #
-plotDir = "~/git/ices-dk/FisheriesAdvice/output/"
+plotDir = "~/git/ices-dk/FisheriesAdvice/output"
 dataDir = "~/git/ices-dk/FisheriesAdvice/"
 options(scipen = 5)
+colList <- brewer.pal(n = 9, name = 'Set1')
 #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ # 
 # Download, unzip, and load data from the source     # 
@@ -43,7 +43,7 @@ spURL <- "ftp://ftp.fao.org/FI/STAT/DATA/ASFIS_sp.zip"
 tmpFileSp <- tempfile(fileext = ".zip")
 download.file(spURL, destfile = tmpFileSp, mode = "wb", quiet = TRUE)
 spList <- read.table(unz(tmpFileSp,
-                         "ASFIS_sp_Feb_2015.txt"),
+                         "ASFIS_sp_Feb_2016.txt"),
                      stringsAsFactors = FALSE, header = TRUE, fill = TRUE)
 #
 # ~~~ ICES Stock assessment summary data  ~~~ #
@@ -75,21 +75,25 @@ fisheryGuild <- read.csv("~/git/ices-dk/rStockOverview/fisheryGuild.csv",
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 #
 # ~~~ Clean ICES stock assessment summary data ~~~ # 
-bookNames<- c(
-  # "The Barents Sea and the Norwegian Sea", 
-  # "Faroe Plateau",
+areaNames<- c(
+  "Oceanic north-east Atlantic",
+  "Faroes",
+  "Iceland Sea",
+  "Ecoregions Barents Sea and Norwegian Sea",
+  "Faroes",
   "Celtic Seas",
   "Greater North Sea",
   "Bay of Biscay and the Iberian Coast",
   "The Baltic Sea")
 # 
-levels(stockTable$EcoRegion) <- c(levels(stockTable$EcoRegion), bookNames)
-# df$ECOREGION[df$ECOREGION == "Barents Sea and Norwegian Sea"] <- "The Barents Sea and the Norwegian Sea"
-# df$ECOREGION[df$ECOREGION == "Faroe Plateau Ecosystem"] <- "Faroe Plateau"
+levels(stockTable$EcoRegion) <- c(levels(stockTable$EcoRegion), areaNames)
+stockTable$EcoRegion[stockTable$EcoRegion == "Barents Sea and Norwegian Sea"] <- "Ecoregions Barents Sea and Norwegian Sea"
+stockTable$EcoRegion[stockTable$EcoRegion == "Iceland and East Greenland"] <- "Iceland Sea"
+stockTable$EcoRegion[stockTable$EcoRegion == "Faroe Plateau Ecosystem"] <- "Faroes"
 stockTable$EcoRegion[stockTable$EcoRegion == "Celtic Sea and West of Scotland"] <- "Celtic Seas"
 stockTable$EcoRegion[stockTable$EcoRegion == "North Sea"] <- "Greater North Sea"
 stockTable$EcoRegion[stockTable$EcoRegion == "Bay of Biscay and Iberian Sea"] <- "Bay of Biscay and the Iberian Coast"
-stockTable$EcoRegion[stockTable$EcoRegion == "Baltic Sea"] <- "The Baltic Sea"
+# stockTable$EcoRegion[stockTable$EcoRegion == "Baltic Sea"] <- "Baltic Sea"
 # 
 # ~~~ Clean up Fishery Guild information ~~~ #
 fisheryGuild <- fisheryGuild %>%
@@ -97,7 +101,6 @@ fisheryGuild <- fisheryGuild %>%
   select(Stock.code, Fisheries.Guild, speciesID) %>%
   inner_join(speciesID, c("speciesID" = "oldCode"))
 # 
-
 # ~~~ Merge Fishery Guild information with ICES stock codes and FAO codes ~~~ #
 guildList <- fisheryGuild %>%
   # mutate(speciesID = toupper(gsub( "-.*$", "", Stock.code))) %>%
@@ -114,7 +117,25 @@ guildList <- fisheryGuild %>%
          fishingPressureDescription = gsub("Fishing pressure: " , "", fishingPressureDescription),
          stockSizeDescription = ifelse(stockSizeDescription == "NA", "Stock Size: Relative", stockSizeDescription),
          FmsyDescription = "FMSY",
-         stockSizeDescription = gsub("Stock Size: ", "", stockSizeDescription))
+         stockSizeDescription = gsub("Stock Size: ", "", stockSizeDescription)) %>%
+  filter(!stockSizeDescription %in% c("B/BMSY", "Relative") |
+         !fishingPressureDescription %in% c("F/FMSY", "Relative"))
+  
+# guildMSY <- guildList %>%
+#   group_by(STOCKID) %>%
+#   mutate(F_FMSY = F / FMSY,
+#          SSB_MSYBtrigger = SSB / MSYBtrigger) %>%
+#   melt(id.vars = c("AssessmentYear",  "ECOREGION", "GUILD","STOCKID", "YEAR"),
+#        measure.vars = c("F_FMSY", "SSB_MSYBtrigger", "F", "FMSY"),
+#        variable.name = "METRIC",
+#        value.name = "stockValue") %>%
+#   filter(!is.na(stockValue)) %>% # remove NA VALUE
+#   group_by(ECOREGION, GUILD, METRIC, YEAR) %>%
+#   mutate(ecoGuildMean = mean(stockValue, na.rm = TRUE)) %>%
+#   group_by(ECOREGION, METRIC, YEAR) %>%
+#   mutate(ecoValue = mean(stockValue, na.rm = TRUE)) %>%
+#   group_by(METRIC, GUILD, YEAR) %>%
+#   mutate(allMean = mean(stockValue, na.rm = TRUE))
 #
 
 # guildMSY <- guildList %>%
@@ -203,59 +224,26 @@ mtexti <- function(text, side, off = 0.25,
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # Prepare subsets for R Markdown rendering #
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ # 
-#
-# ecoAreaCatch <- areaID$value[areaID$Ecoregion == "Baltic Sea" &
-#                              areaID$areaType == "ICESarea"]
-# ecoAreaEffort <- areaID$value[areaID$Ecoregion == "Baltic Sea" &
-#                                 areaID$areaType == "STECFarea"]
 
-# ecoAreaEffort <- c("6 EU", "3C", "7BCEFGHJK") # Looks wrong, but 3c is STEFC for 7a
+ecoregionID <- "Celtic Seas"
+plotList <- c("Baltic Sea", "Greater North Sea", "Celtic Seas")
 
+renderFisheryOverview(ecoregionID = "Celtic Seas")
 
+lapply(plotList, renderFisheryOverview)
 
-# load data 
-# set.seed(500)
-# Score <- rnorm(40, 100, 15)
-# Criteria1<-rnorm(40, 10, 5)
-# Criteria2<-rnorm(40, 20, 5)
-# ID <- sample(1:1000, 2, replace = T)
-# df <- data.frame(ID, Score, Criteria1, Criteria2)
-# datDir <- "~/git/slarge/rCode/"
-
-# 
-# areaID$value[areaID$Ecoregion == "Baltic Sea" &
-#              areaID$areaType == "ICESarea"]
-# head(catchDat)
-# 
-# ecoAreaCatch <- toupper(c("27.7.a",
-#                           "27.7.b", 
-#                           "27.7.c.2", 
-#                           "27.7.e", 
-#                           "27.7.f", 
-#                           "27.7.g", 
-#                           "27.7.h",
-#                           "27.7.j.2", 
-#                           "27.7.k.2", 
-#                           "27.6.a",
-#                           "27.6.b.NK",
-#                           "27.6.b.2"))
-# # 
-# id <- "The Baltic Sea"
-plotList <- c("The Baltic Sea", "Greater North Sea", "Celtic Seas")
+renderFisheryOverview <- function(ecoregionID) {
 # in a single for loop
 #  1. define subgroup
 #  2. render output
-for(id in plotList){
-#     
-  # if(any(is.na(areaID$value[areaID$Ecoregion == id &
-  #                           areaID$areaType == "ICESarea"]) | 
-  #        is.na(areaID$value[areaID$Ecoregion == id &
-  #                           areaID$areaType == "STECFarea"]) == FALSE)) {
-  # # 
-  icesID <- areaID$value[areaID$Ecoregion == id &
+  # 
+  ecoPath <- gsub(" ", "_", ecoregionID)
+  ifelse(!dir.exists(file.path(plotDir, ecoPath)), dir.create(file.path(plotDir, ecoPath)), FALSE)
+  # 
+  icesID <- areaID$value[areaID$Ecoregion == ecoregionID &
                            areaID$areaType == "ICESarea"]
-  stecfID <- areaID$value[areaID$Ecoregion == id &
-                           areaID$areaType == "STECFarea"]
+  stecfID <- areaID$value[areaID$Ecoregion == ecoregionID &
+                            areaID$areaType == "STECFarea"]
   # 
   catchDatECO <- catchDat %>%
     Filter(f = function(x)!all(is.na(x))) %>%
@@ -265,7 +253,6 @@ for(id in plotList){
          value.name = "VALUE") %>%
     inner_join(spList, c("Species" = "X3A_CODE")) %>%
     full_join(fisheryGuild, c("Species" = "newCode")) %>%
-    # full_join(fisheryGuild, c("Species" = "newCode")) %>%
     mutate(YEAR = as.numeric(gsub("X", "", YEAR)))
   #
   effortDatECO <-
@@ -287,14 +274,14 @@ for(id in plotList){
            YEAR = as.numeric(gsub("\\s.+$", "", YEAR))) %>%
     filter(METRIC == "L")
   # 
-  guildListECO <- guildList %>%
-    filter(ECOREGION == id)
-  # 
+    guildListECO <- guildList %>%
+    filter(ECOREGION == ecoregionID)
+
+    #
   rmarkdown::render(paste0(dataDir, "fisheriesAdvice_template.rmd"),
-                    output_file = paste0('FisheriesAdvice_', id, '.html'),
-                    params = list(set_title = as.character(id)))    
-  # next
-  # }
-}
+                    output_dir = file.path(plotDir, ecoPath),
+                    output_file = paste0('FisheriesAdvice_', ecoregionID, '.html'),
+                    params = list(set_title = as.character(ecoregionID)))    
+} 
 
 
