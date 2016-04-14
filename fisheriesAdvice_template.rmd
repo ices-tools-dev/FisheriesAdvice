@@ -10,6 +10,11 @@ params:
 title: `r paste0("Fishery Overview - ", params$set_title)`
 ---
 
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.path = paste0("output/", gsub(" ", "_", params$set_title), "/"),
+                      echo=FALSE, warning=FALSE, message=FALSE)
+```
+
 ```{r catchDatECO, include = FALSE}
 catchCountry <- catchDatECO %>%
   group_by(YEAR, Country) %>%
@@ -43,12 +48,13 @@ catchPlotCast <- catchPlotCast[,!(names(catchPlotCast) %in% "YEAR")]
 ylim <- c(0, max(rowSums(catchPlotCast, na.rm = T)))
 cols <- names(catchPlotCast)
 #
-# png(filename = paste0(plotDir, id, " Overview_figure1.png"),
+# png(filename = paste0(plotDir, "/", id, " Overview_figure1.png"),
 #     width = 6.5,
 #     height = 4.5,
 #     units = "in",
 #     res = 600)
 #
+
 par(xpd = T,
     mar=c(2.15, 2.25, 0.45, 3.5),
     oma = c(0, 0, 0, 1),

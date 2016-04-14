@@ -228,7 +228,7 @@ mtexti <- function(text, side, off = 0.25,
 ecoregionID <- "Celtic Seas"
 plotList <- c("Baltic Sea", "Greater North Sea", "Celtic Seas")
 
-renderFisheryOverview(ecoregionID = "Celtic Seas")
+renderFisheryOverview(ecoregionID = "Baltic Sea")
 
 lapply(plotList, renderFisheryOverview)
 
@@ -281,7 +281,8 @@ renderFisheryOverview <- function(ecoregionID) {
   rmarkdown::render(paste0(dataDir, "fisheriesAdvice_template.rmd"),
                     output_dir = file.path(plotDir, ecoPath),
                     output_file = paste0('FisheriesAdvice_', ecoregionID, '.html'),
-                    params = list(set_title = as.character(ecoregionID)))    
+                    params = list(set_title = as.character(ecoregionID)),
+                    envir = new.env())    
 } 
 
 
